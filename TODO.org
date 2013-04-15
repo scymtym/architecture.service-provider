@@ -1,0 +1,3 @@
+* STARTED Full compile time support
+* DONE Handle redefinition of services
+* DONE Handle redefinition of providers

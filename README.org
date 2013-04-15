@@ -1,0 +1,26 @@
+#+TITLE:       architecture.service-provider README
+#+AUTHOR:      Jan Moringen
+#+EMAIL:       jmoringe@techfak.uni-bielefeld.de
+#+DESCRIPTION: Framework for defining, introspecting and using services and providers of such
+#+KEYWORDS:    common lisp, architecture, service, provider, framework
+#+LANGUAGE:    en
+
+* TODO Introduction
+  + protocol -> instantiating implementations
+  + even with =make-foo=, how to enumerate available implementations?
+  + lazy loading
+* Tutorial
+** TODO Defining a Service
+** TODO Defining a Provider
+** TODO Using a Service
+** TODO Introspecting a Service
+** TODO Efficiency Considerations
+* Reference
+* TODO Related Work
+  + Java Service Provider Interface
+  +
+
+* Settings                                                         :noexport:
+
+#+OPTIONS: H:2 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
