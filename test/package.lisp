@@ -1,4 +1,4 @@
-;;;; package.lisp --- Package definition for unit tests of the service-provider System.
+;;;; package.lisp --- Package definition for unit tests of the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;
@@ -15,8 +15,8 @@
    #:run-tests)
 
   (:documentation
-   "This package contains unit tests for the service-provider
-    system"))
+   "This package contains unit tests for the
+    architecture.service-provider system"))
 
 (cl:in-package #:service-provider.test)
 
@@ -24,7 +24,8 @@
 
 (def-suite service-provider
   :description
-  "Root unit test suite for the service-provider system.")
+  "Root unit test suite for the architecture.service-provider
+   system.")
 
 (defun run-tests ()
   (eos:run! 'service-provider))

@@ -1,4 +1,4 @@
-;;;; protocol.lisp --- Unit tests for the protocol functions.
+;;;; protocol.lisp --- Unit tests for the protocol functions of the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2013 Jan Moringen
 ;;;;

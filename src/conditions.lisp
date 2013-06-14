@@ -1,4 +1,4 @@
-;;;; conditions.lisp --- Conditions used by the service-provider system.
+;;;; conditions.lisp --- Conditions used by the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;

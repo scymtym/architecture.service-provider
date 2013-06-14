@@ -1,4 +1,4 @@
-;;;; package.lisp --- Package definition for the service-provider system.
+;;;; package.lisp --- Package definition for the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;

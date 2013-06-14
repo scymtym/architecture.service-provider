@@ -1,10 +1,10 @@
-;;;; service-provider.asd --- System definition of service-provider system.
+;;;; architecture.service-provider.asd --- System definition of architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:service-provider-system
+(cl:defpackage #:architecture.service-provider-system
   (:use
    #:cl
    #:asdf)
@@ -13,7 +13,7 @@
    #:version/list
    #:version/string))
 
-(cl:in-package #:service-provider-system)
+(cl:in-package #:architecture.service-provider-system)
 
 ;;; Version stuff
 
@@ -36,7 +36,7 @@
 
 ;;; System definitions
 
-(defsystem :service-provider
+(defsystem :architecture.service-provider
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
@@ -56,9 +56,9 @@
                               (:file       "provider")
                               (:file       "macros")
                               #+later (:file       "compilation"))))
-  :in-order-to ((test-op (test-op :service-provider-test))))
+  :in-order-to ((test-op (test-op :architecture.service-provider-test))))
 
-(defsystem :service-provider-test
+(defsystem :architecture.service-provider-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
@@ -80,5 +80,5 @@
                               #+later (:file       "compilation")))))
 
 (defmethod perform ((op        test-op)
-                    (component (eql (find-system :service-provider-test))))
+                    (component (eql (find-system :architecture.service-provider-test))))
   (funcall (find-symbol "RUN-TESTS" :service-provider.test)))

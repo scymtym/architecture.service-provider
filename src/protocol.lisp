@@ -1,4 +1,4 @@
-;;;; protocol.lisp --- Protocol provided by the service-provider system.
+;;;; protocol.lisp --- Protocol provided by the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;

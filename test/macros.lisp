@@ -1,4 +1,4 @@
-;;;; macros.lisp --- Unit tests for macros of the service-provider system.
+;;;; macros.lisp --- Unit tests for macros of the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;

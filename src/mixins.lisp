@@ -1,4 +1,4 @@
-;;;; mixins.lisp --- Mixin classes used/provided by the service-provider system.
+;;;; mixins.lisp --- Mixin classes used/provided by the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;

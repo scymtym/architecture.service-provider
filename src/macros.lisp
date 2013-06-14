@@ -1,4 +1,4 @@
-;;;; macros.lisp --- Macros provided by the service-provider system.
+;;;; macros.lisp --- Macros provided by the architecture.service-provider system.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;
