@@ -79,6 +79,30 @@
 (defvar *services* (make-hash-table)
   "TODO(jmoringe): document")
 
+(defvar *services-lock* (bt:make-recursive-lock "Services")
+  "This lock prevents concurrent access to `*services*'.")
+
+(defun call-with-locked-services (thunk)
+  (bt:with-recursive-lock-held (*services-lock*)
+    (funcall thunk)))
+
+(defmacro with-locked-services (&body body)
+  `(call-with-locked-services (lambda () ,@body)))
+
+(defmethod find-service :around ((name t)
+                                 &key
+                                 if-does-not-exist)
+  (declare (ignore if-does-not-exist))
+
+  (with-locked-services (call-next-method)))
+
+(defmethod (setf find-service) :around ((new-value t) (name t)
+                                        &key
+                                        if-does-not-exist)
+  (declare (ignore if-does-not-exist))
+
+  (with-locked-services (call-next-method)))
+
 (defmethod find-service ((name symbol)
                          &key
                          (if-does-not-exist #'error))

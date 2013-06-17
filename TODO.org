@@ -1,3 +1,7 @@
 * STARTED Full compile time support
 * DONE Handle redefinition of services
 * DONE Handle redefinition of providers
+* Thread Safety
+** STARTED Thread-safe redefinition of services
+** TODO Thread-safe redefinition of providers
+** TODO Thread-safe creation of providers

@@ -43,8 +43,9 @@
   :license     "LLGPLv3; see COPYING file for details."
   :description "Provides a framework for registering and finding services and providers of these."
   :depends-on  (:alexandria
-                (:version :let-plus        "0.2")
-                (:version :more-conditions "0.3.0"))
+                (:version :let-plus         "0.2")
+                (:version :more-conditions  "0.3.0")
+                (:version :bordeaux-threads "0.8"))
   :components  ((:module     "src"
                  :serial     t
                  :components ((:file       "package")

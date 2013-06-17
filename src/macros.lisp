@@ -1,6 +1,6 @@
 ;;;; macros.lisp --- Macros provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -11,15 +11,16 @@
 (defun register-service (name service-class initargs &optional documentation)
   (check-type name service-designator)
 
-  (setf (find-service name)
-        (if-let ((service (find-service name :if-does-not-exist nil)))
-          (apply #'change-class service service-class
-                 :documentation documentation
-                 initargs)
-          (apply #'make-instance service-class
-                 :name          name
-                 :documentation documentation
-                 initargs))))
+  (with-locked-services
+    (setf (find-service name)
+          (if-let ((service (find-service name :if-does-not-exist nil)))
+            (apply #'change-class service service-class
+                   :documentation documentation
+                   initargs)
+            (apply #'make-instance service-class
+                   :name          name
+                   :documentation documentation
+                   initargs)))))
 
 (defmacro define-service (name &body options)
   "Define a service named NAME with additional aspects specified in

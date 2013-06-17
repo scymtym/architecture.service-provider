@@ -48,6 +48,8 @@
 
   ;; Macros
   (:export
+   #:with-locked-services
+
    #:define-service
 
    #:register-provider/class
