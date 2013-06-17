@@ -7,9 +7,9 @@
 (cl:in-package #:service-provider)
 
 (deftype service-designator ()
-  "TODO"
-  'symbol)
+  "A symbol designating a service."
+  '(and symbol (not null)))
 
 (deftype provider-designator ()
-  "TODO"
-  'symbol)
+  "A symbol designating a service provider."
+  '(and symbol (not null)))

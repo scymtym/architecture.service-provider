@@ -55,6 +55,12 @@
 
 ;; Default behavior
 
+(macrolet ((define-lookup-method (name)
+             `(defmethod ,name ((service symbol))
+                (,name (find-service service)))))
+  (define-lookup-method service-name)
+  (define-lookup-method service-providers))
+
 ;;; TODO(jmoringe, 2012-12-16): move to suitable file
 
 (defvar *services* (make-hash-table)

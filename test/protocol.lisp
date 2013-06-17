@@ -8,6 +8,25 @@
 
 (in-suite service-provider)
 
+;;; Service accessor tests
+
+(test protocol.service-accessors.designators
+  "Check that service accessors accept designators."
+
+  ;; When the service is defined, all accessors should work on its
+  ;; designator.
+  (with-service (:mock)
+    (is (eq :mock (service-name :mock)))
+    (is (equal '() (service-providers :mock))))
+
+  ;; For an undefined service, all accessors should signal the usual
+  ;; `missing-service-error'.
+  (macrolet ((test (form)
+               `(signals missing-service-error ,form)))
+
+    (test (service-name :mock))
+    (test (service-providers :mock))))
+
 ;;; `find-service' tests
 
 (test protocol.find-service.conditions
