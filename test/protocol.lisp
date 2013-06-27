@@ -16,9 +16,11 @@
   ;; When the service is defined, all accessors should work on its
   ;; designator.
   (with-service (:mock (:documentation "foo"))
-    (is (eq :mock (service-name :mock)))
-    (is (equal '() (service-providers :mock)))
-    (is (equal "foo" (documentation :mock 'service-provider::service))))
+    (is (eq    :mock (service-name :mock)))
+    (is (equal '()   (service-providers :mock)))
+    (is (equal "foo" (documentation :mock 'service-provider::service)))
+    (is (equal '()   (service-providers/alist :mock)))
+    (is (equal '()   (service-providers/plist :mock))))
 
   ;; For an undefined service, all accessors should signal the usual
   ;; `missing-service-error'.
@@ -26,8 +28,25 @@
                `(signals missing-service-error ,form)))
 
     (test-case (service-name :no-such-service))
-    (test-case (service-providers :no-such-service)))
+    (test-case (service-providers :no-such-service))
+    (test-case (service-providers/alist :no-such-service))
+    (test-case (service-providers/plist :no-such-service)))
+
   (is (null (documentation :no-such-service 'service-provider::service))))
+
+(test protocol.service-providers.smoke
+  "Smoke test for the service-providers{,/alist,/plist} functions."
+
+  (with-service (:mock1)
+    (register-provider/function :mock1 :mock2 :function 'list)
+    (let ((provider (find-provider :mock1 :mock2)))
+
+      (is (equal (list provider)
+                 (service-providers :mock1)))
+      (is (equal (list (cons :mock2 provider))
+                 (service-providers/alist :mock1)))
+      (is (equal (list :mock2 provider)
+                 (service-providers/plist :mock1))))))
 
 ;;; `find-service' tests
 

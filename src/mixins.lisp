@@ -44,6 +44,12 @@
 (defmethod service-providers ((service provider-list-mixin))
   (hash-table-values (service-%providers service)))
 
+(defmethod service-providers/alist ((service provider-list-mixin))
+  (hash-table-alist (service-%providers service)))
+
+(defmethod service-providers/plist ((service provider-list-mixin))
+  (hash-table-plist (service-%providers service)))
+
 (defmethod find-provider ((service  provider-list-mixin)
                           (provider symbol)
                           &key

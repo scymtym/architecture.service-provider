@@ -16,6 +16,17 @@
   (:documentation
    "Return a sequence of the providers of SERVICE."))
 
+(defgeneric service-providers/alist (service)
+  (:documentation
+   "Return the providers of SERVICE as an alist in which CARs are
+    provider names and CDRs are the corresponding provider objects."))
+
+(defgeneric service-providers/plist (service)
+  (:documentation
+   "Return the providers of SERVICE as a plist in which keys are
+    provider names and values are the corresponding provider
+    objects."))
+
 (defgeneric find-service (name
                           &key
                           if-does-not-exist)
@@ -59,7 +70,9 @@
              `(defmethod ,name ((service symbol))
                 (,name (find-service service)))))
   (define-lookup-method service-name)
-  (define-lookup-method service-providers))
+  (define-lookup-method service-providers)
+  (define-lookup-method service-providers/alist)
+  (define-lookup-method service-providers/plist))
 
 ;;; TODO(jmoringe, 2012-12-16): move to suitable file
 

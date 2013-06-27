@@ -34,6 +34,8 @@
   (:export
    #:service-name
    #:service-providers
+   #:service-providers/alist
+   #:service-providers/plist
 
    #:find-service)                  ; also setf
 
