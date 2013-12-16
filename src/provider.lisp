@@ -40,6 +40,9 @@
 (defmethod print-object ((object class-provider) stream)
   (print-unreadable-object (object stream :type t :identity t)
     (format stream "~A" (class-name (class-provider-class object)))))
+(defmethod documentation ((slotd class-provider) (doc-type (eql t)))
+  (documentation (class-provider-class slotd) t))
+
 
 ;;; `function-provider'
 
@@ -79,3 +82,6 @@
 (defmethod print-object ((object function-provider) stream)
   (print-unreadable-object (object stream :type t :identity t)
     (format stream "~A" (function-provider-function object))))
+
+(defmethod documentation ((slotd function-provider) (doc-type (eql t)))
+  (documentation (function-provider-function slotd) 'function))

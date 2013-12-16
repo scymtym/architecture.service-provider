@@ -15,14 +15,15 @@
   (:documentation
    "TODO(jmoringe): document"))
 
-(defmethod documentation ((slotd    standard-service)
-                          (doc-type t))
-  (format nil "~:[Not documented.~;~:*~A~]~@[~2&Providers:~&~{~A~^~&~}~]"
-          (service-documentation slotd)
-          (service-providers slotd)))
-
 (defmethod print-object ((object standard-service) stream)
   (print-unreadable-object (object stream :type t :identity t)
     (format stream "~S (~D)"
             (service-name object)
             (length (service-providers object)))))
+
+(defmethod describe-object ((object standard-service) stream)
+  (format stream "~A~@[~2&Providers:~&~{~A~^~&~}~]"
+          object (service-providers object)))
+
+(defmethod documentation ((slotd standard-service) (doc-type (eql t)))
+  (service-documentation slotd))

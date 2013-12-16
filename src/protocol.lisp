@@ -117,6 +117,10 @@
   (remhash name *services*)
   new-value)
 
+(defmethod documentation ((slotd symbol) (doc-type (eql 'service)))
+  (when-let ((service (find-service slotd :if-does-not-exist nil)))
+    (documentation service t)))
+
 ;;; Provider protocol
 
 (defgeneric find-provider (service provider
