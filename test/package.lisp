@@ -7,7 +7,7 @@
 (cl:defpackage #:service-provider.test
   (:use
    #:cl
-   #:eos
+   #:fiveam
 
    #:service-provider)
 
@@ -28,7 +28,7 @@
    system.")
 
 (defun run-tests ()
-  (eos:run! 'service-provider))
+  (run! 'service-provider))
 
 ;;; Generic test tools
 

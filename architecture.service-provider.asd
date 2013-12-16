@@ -68,7 +68,7 @@
                 (:version :let-plus "0.2")
                 :more-conditions
 
-                :eos)
+                (:version :fiveam   "1.1"))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
@@ -81,4 +81,4 @@
 
 (defmethod perform ((op        test-op)
                     (component (eql (find-system :architecture.service-provider-test))))
-  (funcall (find-symbol "RUN-TESTS" :service-provider.test)))
+  (uiop:symbol-call :service-provider.test "RUN-TESTS"))

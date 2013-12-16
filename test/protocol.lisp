@@ -21,11 +21,11 @@
 
   ;; For an undefined service, all accessors should signal the usual
   ;; `missing-service-error'.
-  (macrolet ((test (form)
+  (macrolet ((test-case (form)
                `(signals missing-service-error ,form)))
 
-    (test (service-name :mock))
-    (test (service-providers :mock))))
+    (test-case (service-name :mock))
+    (test-case (service-providers :mock))))
 
 ;;; `find-service' tests
 
