@@ -39,6 +39,8 @@
 
   ;; Provider Protocol
   (:export
+   #:provider-name
+
    #:find-provider                  ; also setf
    #:make-provider)
 

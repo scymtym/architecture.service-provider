@@ -11,9 +11,8 @@
 (defclass name-mixin ()
   ((name :initarg  :name
          :type     symbol
-         :reader   service-name
          :documentation
-         ""))
+         "Stores the name of the service or provider."))
   (:default-initargs
    :name (missing-required-initarg 'name-mixin :name))
   (:documentation

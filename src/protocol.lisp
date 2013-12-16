@@ -123,6 +123,10 @@
 
 ;;; Provider protocol
 
+(defgeneric provider-name (provider)
+  (:documentation
+   "Return the symbol which is the name of PROVIDER."))
+
 (defgeneric find-provider (service provider
                            &key
                            if-does-not-exist)

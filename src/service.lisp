@@ -11,7 +11,7 @@
 (defclass standard-service (name-mixin
                             documentation-mixin
                             provider-list-mixin)
-  ()
+  ((name :reader   service-name))
   (:documentation
    "TODO(jmoringe): document"))
 

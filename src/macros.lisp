@@ -70,7 +70,9 @@
            (if-let ((,provider (find-provider ',service-name ',provider-name
                                               :if-does-not-exist nil)))
              (change-class ,provider ',provider-class ,@initargs)
-             (make-instance ',provider-class ,@initargs)))))
+             (make-instance ',provider-class
+                            :name ',provider-name
+                            ,@initargs)))))
 
 (macrolet
     ((define-register-function
@@ -87,9 +89,11 @@
                       ,@args
                       &allow-other-keys)
           ,@(when documentation `(,documentation))
-          (let ((initargs (remove-from-plist
-                           args :provider-class
-                           ,@(mapcar #'car (plist-alist required-initargs)))))
+          (let ((initargs (append
+                           (list :name provider-name)
+                           (remove-from-plist
+                            args :provider-class
+                            ,@(mapcar #'car (plist-alist required-initargs))))))
             (setf (find-provider service-name provider-name)
                   (if-let ((provider (find-provider service-name provider-name
                                                     :if-does-not-exist nil)))

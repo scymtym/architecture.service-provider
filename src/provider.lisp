@@ -8,9 +8,9 @@
 
 ;;; `class-provider'
 
-;; TODO name-mixin
-(defclass class-provider ()
-  ((class :type     class
+(defclass class-provider (name-mixin)
+  ((name  :reader   provider-name)
+   (class :type     class
           :reader   class-provider-class
           :documentation
           ""))
@@ -40,15 +40,15 @@
 (defmethod print-object ((object class-provider) stream)
   (print-unreadable-object (object stream :type t :identity t)
     (format stream "~A" (class-name (class-provider-class object)))))
+
 (defmethod documentation ((slotd class-provider) (doc-type (eql t)))
   (documentation (class-provider-class slotd) t))
 
-
 ;;; `function-provider'
 
-;; TODO name-mixin
-(defclass function-provider ()
-  ((function :type     (or symbol function)
+(defclass function-provider (name-mixin)
+  ((name     :reader   provider-name)
+   (function :type     (or symbol function)
              :reader   function-provider-function
              :documentation
              ""))
