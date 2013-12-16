@@ -5,15 +5,58 @@
 #+KEYWORDS:    common lisp, architecture, service, provider, framework
 #+LANGUAGE:    en
 
-* TODO Introduction
-  + protocol -> instantiating implementations
-  + even with =make-foo=, how to enumerate available implementations?
-  + lazy loading
+* STARTED Introduction
+  In software architectures, a common feature is parametrization of
+  algorithms or protocols with higher order functions or classes and
+  generic function complying to a certain protocol. These places of
+  potential variations can thought of as requiring a certain service
+  which can be provided by arbitrary providers.
+  # are sometimes called "extension points".
+
+  While Common Lisp supports these designs very well on a language
+  level (via symbols naming functions, first class functions,
+  =cl:make-instance=, etc.), it often useful to go a little bit beyond
+  these builtin features:
+  * It is considered good practice to use something like
+    =make-test-result-formatter= instead of letting clients call
+    =cl:make-instance= directly
+  * It is sometimes desirable to be able to enumerate all known
+    providers of a given service
+  * Compile-time analysis of instantiation requests can reveal errors
+    early or enable transformation into more efficient code
+  * Lazy loading of service providers when they are instantiated
+
+  This systems adds first class services and service providers to
+  facilitate the above use cases while trying to avoid conceptual
+  mismatches with the builtin mechanisms.
 * Tutorial
-** TODO Defining a Service
-** TODO Defining a Provider
-** TODO Using a Service
-** TODO Introspecting a Service
+** STARTED Defining a Service
+   #+BEGIN_SRC lisp
+     (service-provider:define-service my-service
+       (:documentation
+        "Providers of this service to stuff."))
+   #+END_SRC
+** STARTED Defining a Provider
+   #+BEGIN_SRC lisp
+     (defclass my-class ()
+       ((foo :initarg :foo)))
+
+     (service-provider:register-provider/class 'my-service 'my-class)
+   #+END_SRC
+** STARTED Instantiating a Provider
+   The primary way to instantiate a service provider is
+   =service-provider:make-provider= which resembles
+   =cl:make-instance=:
+   #+BEGIN_SRC lisp
+     (service-provider:make-provider 'my-service 'my-class :foo 1)
+   #+END_SRC
+** STARTED Introspecting a Service
+   Introspection of services works much like CLOS introspection:
+   #+BEGIN_SRC lisp
+     (let ((service (service-provider:find-service 'my-service)))
+       (print (list (service-provider:service-name service)
+                    (service-provider:service-providers service))))
+   #+END_SRC
 ** TODO Efficiency Considerations
 * Reference
 * TODO Related Work
