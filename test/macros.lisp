@@ -14,6 +14,7 @@
   ())
 
 (test macros.define-service.smoke
+  "Smoke test for the `define-service' macro."
 
   (with-cleaned-up-service (foo)
     (define-service foo)
@@ -32,6 +33,8 @@
     (is (typep (find-service 'foo) 'specialized-service))))
 
 (test macros.define-service.redefinition
+  "Test behavior of the `define-service' macro when services are
+   redefined."
 
   ;; Change documentation back and forth.
   (with-cleaned-up-service (foo)
@@ -59,15 +62,19 @@
   ())
 
 (test macros.register-provider/class.smoke
+  "Smoke test for the `register-provider/class' function."
 
+  ;; Test registering and finding a simple provider.
   (with-service (foo)
     (register-provider/class 'foo :mock :class 'mock-provider)
-    (find-provider 'foo :mock))
+    (is (equal :mock (provider-name (find-provider 'foo :mock)))))
 
+  ;; Test registering and finding a provider of a specialized class.
   (with-service (foo)
     (register-provider/class 'foo :mock
                              :provider-class 'specialized-provider
                              :class          'mock-provider)
+    (is (equal :mock (provider-name (find-provider 'foo :mock))))
     (is (typep (find-provider 'foo :mock) 'specialized-provider))))
 
 ;;; `register-provider/function'
