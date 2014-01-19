@@ -9,14 +9,16 @@
   In software architectures, a common feature is parametrization of
   algorithms or protocols with higher order functions or classes and
   generic function complying to a certain protocol. These places of
-  potential variations can thought of as requiring a certain service
-  which can be provided by arbitrary providers.
+  potential variations can be thought of as requiring a certain
+  service which can be provided by arbitrary providers (See [[*Java
+  Service Provider Interface]] for a related approach).
   # are sometimes called "extension points".
+
 
   While Common Lisp supports these designs very well on a language
   level (via symbols naming functions, first class functions,
-  =cl:make-instance=, etc.), it often useful to go a little bit beyond
-  these builtin features:
+  =cl:make-instance=, etc.), it is often useful to go a little bit
+  beyond these builtin features:
   * It is considered good practice to use something like
     =make-test-result-formatter= instead of letting clients call
     =cl:make-instance= directly
@@ -34,9 +36,23 @@
    #+BEGIN_SRC lisp
      (service-provider:define-service my-service
        (:documentation
-        "Providers of this service to stuff."))
+        "Providers of this service do stuff."))
    #+END_SRC
 ** STARTED Defining a Provider
+   A provider of a service can be anything for which a method on
+   =service-provider:make-provider=, and optionally
+   =service-provider:make-provider-form=, is defined.
+
+   For the common cases in which a provider instantiates a class or
+   calls a functions, the builtin provider classes
+   =service-provider:class-provider= and
+   =service-provider:function-provider= can be used. The easiest way
+   to register providers of these two kinds are the functions
+   =service-provider:register-provider/class= and
+   =service-provider:register-provider/function= respectively.
+
+   For example, registering a class as a provider of a service can be
+   accomplished like this:
    #+BEGIN_SRC lisp
      (defclass my-class ()
        ((foo :initarg :foo)))
@@ -60,8 +76,21 @@
 ** TODO Efficiency Considerations
 * Reference
 * TODO Related Work
-  + Java Service Provider Interface
-  +
+** Java Service Provider Interface
+   See [[http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html][documentation of the ServiceLoader class]] for details.
+
+   Differences:
+   * =architecture.service-providers= does not tie services to classes
+     (or interfaces); services and providers are identified by
+     symbols.
+   * Introspection is modeled after CLOS introspection, e.g.
+     =cl:find-class=.
+   * Documentation is modeled after and integrates =cl:defclass= and
+     =cl:documentation=.
+   * Redefinitions and class-changes of services and service providers
+     are supported.
+   * Support for compile-time error-detection and optimizations can be
+     added.
 
 * Settings                                                         :noexport:
 
