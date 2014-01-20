@@ -120,3 +120,36 @@
   (with-service (:mock)
     (is (null (find-provider :mock 'no-such-provider
                              :if-does-not-exist nil)))))
+
+(test protocol.find-provider.undefinition
+  "Test undefining providers via (setf (find-provider ...) nil)."
+
+  (macrolet
+      ((test-case (&body body)
+         `(with-service (:mock) ,@body))
+       (test-case/with-mock-provider (&body body)
+         `(test-case
+           (register-provider/function :mock :mock2 :function 'list)
+           ,@body)))
+
+    ;; When an attempt is made to remove a non-existent provider, a
+    ;; warning should maybe be signaled depending on the error policy.
+    (test-case
+     (signals missing-provider-warning
+       (setf (find-provider :mock :does-not-exist) nil)))
+    (test-case
+     (does-not-signal missing-provider-warning
+       (setf (find-provider :mock :does-not-exist :if-does-not-exist nil) nil)))
+
+    ;; When an existing provider is undefined, no condition should be
+    ;; signaled whatsoever and the provider should be gone afterward.
+    (test-case/with-mock-provider
+     (find-provider :mock :mock2) ; sanity check: provider should be there
+     (does-not-signal missing-provider-warning
+       (setf (find-provider :mock :mock2) nil))
+     (is (null (find-provider :mock :mock2 :if-does-not-exist nil))))
+    (test-case/with-mock-provider
+     (find-provider :mock :mock2) ; sanity check: provider should be there
+     (does-not-signal missing-provider-warning
+       (setf (find-provider :mock :mock2 :if-does-not-exist nil) nil))
+     (is (null (find-provider :mock :mock2 :if-does-not-exist nil))))))

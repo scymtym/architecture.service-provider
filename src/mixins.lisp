@@ -1,6 +1,6 @@
 ;;;; mixins.lisp --- Mixin classes used/provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -74,7 +74,7 @@
                                  &key
                                  if-does-not-exist)
   (let ((providers (service-%providers service)))
-    (unless (gethash provider *services*)
+    (unless (gethash provider providers)
       (error-behavior-restart-case
           (if-does-not-exist
            (missing-provider-error

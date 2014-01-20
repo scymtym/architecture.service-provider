@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for unit tests of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -31,6 +31,13 @@
   (run! 'service-provider))
 
 ;;; Generic test tools
+
+(defmacro does-not-signal (condition &body body)
+  `(handler-bind
+       ((,condition (lambda (condition)
+                      (error "~@<Unexpected condition was signaled: ~A.~@:>"
+                             condition))))
+     ,@body))
 
 (defmacro with-clean-outer-compilation-unit (&body body)
   "Execute BODY keeping outer compilation-unit report(s) clean of

@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Protocol provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -173,10 +173,10 @@
     If NEW-VALUE is nil, an existing provider designated by SERVICE
     and PROVIDER is removed.
 
-    TODO not yet true IF-DOES-NOT-EXIST is accepted for parity with
-    `find-provider' and usually ignored. However, when NEW-VALUE is
-    nil, IF-DOES-NOT-EXIST controls whether an error should be
-    signaled in case the to-be-removed provider does not exist."))
+    IF-DOES-NOT-EXIST is accepted for parity with `find-provider' and
+    usually ignored. However, when NEW-VALUE is nil, IF-DOES-NOT-EXIST
+    controls whether an error should be signaled in case the
+    to-be-removed provider does not exist."))
 
 (defgeneric make-provider (service provider &rest args)
   (:documentation
@@ -258,10 +258,10 @@
                                  (service   symbol)
                                  (provider  t)
                                  &key
-                                 if-does-not-exist)
-  (declare (ignore if-does-not-exist))
-
-  (setf (find-provider (find-service service) provider) new-value))
+                                 (if-does-not-exist #'warn))
+  (setf (find-provider (find-service service) provider
+                       :if-does-not-exist if-does-not-exist)
+        new-value))
 
 (defmethod make-provider ((service  symbol)
                           (provider t)
