@@ -1,6 +1,6 @@
 ;;;; service.lisp --- Service classes provided by the service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -8,7 +8,8 @@
 
 ;;; `standard-service'
 
-(defclass standard-service (name-mixin
+(defclass standard-service (synchronized-service-mixin
+                            name-mixin
                             documentation-mixin
                             provider-list-mixin)
   ((name :reader   service-name))

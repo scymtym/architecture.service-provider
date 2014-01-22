@@ -84,3 +84,44 @@
 
     (remhash provider providers)
     new-value))
+
+;;; `synchronized-service-mixin'
+
+(defclass synchronized-service-mixin ()
+  ((lock :reader   service-%lock
+         :initform (bt:make-recursive-lock "Service lock")
+         :documentation
+         "Stores a lock which can be used to protect the service
+          against concurrent accesses."))
+  (:documentation
+   "This class is intended to be mixed into service classes which have
+    to protect themselves against concurrent accesses using a lock."))
+
+(defun call-with-locked-service (service thunk)
+  (bt:with-recursive-lock-held ((service-%lock service))
+    (funcall thunk)))
+
+(defmacro with-locked-service ((service) &body body)
+  `(call-with-locked-service ,service (lambda () ,@body)))
+
+(macrolet
+    ((define-synchronized-method (name args)
+       (let+ ((args/parsed
+               (substitute
+                '(service synchronized-service-mixin) 'service args))
+              ((&values &ign optional &ign keywords)
+               (parse-ordinary-lambda-list
+                args/parsed :allow-specializers t)))
+         `(defmethod ,name :around ,args/parsed
+            (declare (ignore ,@(mapcar #'first optional)
+                             ,@(mapcar #'cadar keywords)))
+            (with-locked-service (service) (call-next-method))))))
+
+  (define-synchronized-method service-providers (service))
+  (define-synchronized-method service-providers/alist (service))
+  (define-synchronized-method service-providers/plist (service))
+  (define-synchronized-method find-provider (service (provider symbol)
+                                             &key if-does-not-exist))
+  (define-synchronized-method (setf find-provider)
+      ((new-value t) service (provider symbol)
+       &key if-does-not-exist)))

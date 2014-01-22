@@ -65,13 +65,16 @@
   (check-type service-name  service-designator)
   (check-type provider-name provider-designator)
 
-  (setf (find-provider service-name provider-name)
-        (if-let ((provider (find-provider service-name provider-name
-                                          :if-does-not-exist nil)))
-          (apply #'change-class provider provider-class initargs)
-          (apply #'make-instance provider-class
-                 :name provider-name
-                 initargs))))
+  (with-locked-services
+    (let ((service (find-service service-name)))
+      (with-locked-service (service)
+        (setf (find-provider service provider-name)
+              (if-let ((provider (find-provider service provider-name
+                                                :if-does-not-exist nil)))
+                (apply #'change-class provider provider-class initargs)
+                (apply #'make-instance provider-class
+                       :name provider-name
+                       initargs)))))))
 
 (defmacro define-provider ((service-name provider-name) spec &body options)
   "TODO(jmoringe): document"
