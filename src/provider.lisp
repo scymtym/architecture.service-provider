@@ -1,4 +1,4 @@
-;;;; provider.lisp ---
+;;;; provider.lisp --- Builtin provider classes.
 ;;;;
 ;;;; Copyright (C) 2012, 2013 Jan Moringen
 ;;;;
@@ -13,7 +13,7 @@
    (class :type     class
           :reader   class-provider-class
           :documentation
-          ""))
+          "Stores the class providing the service."))
   (:default-initargs
    :class (missing-required-initarg 'class-provider :class))
   (:documentation
@@ -51,7 +51,7 @@
    (function :type     (or symbol function)
              :reader   function-provider-function
              :documentation
-             ""))
+             "Stores the function providing the service."))
   (:default-initargs
    :function (missing-required-initarg 'function-provider :function))
   (:documentation

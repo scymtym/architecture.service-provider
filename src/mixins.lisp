@@ -16,7 +16,8 @@
   (:default-initargs
    :name (missing-required-initarg 'name-mixin :name))
   (:documentation
-   "TODO(jmoringe): document"))
+   "This class is intended to be mixed into service or provider
+    classes which have an associated name."))
 
 ;;; `documentation-mixin'
 
@@ -26,9 +27,10 @@
                   :accessor service-documentation
                   :initform nil
                   :documentation
-                  ""))
+                  "Stores nil or a documentation string."))
   (:documentation
-   "TODO(jmoringe): document"))
+   "This class is intended to be mixed into service or provider
+    classes which support associated documentation strings."))
 
 ;;; `provider-list-mixin'
 
@@ -39,7 +41,8 @@
               :documentation
               "Associate provider names to provider instances."))
   (:documentation
-   "TODO(jmoringe): document"))
+   "This class is intended to be mixed service classes which have to
+    store a list of providers."))
 
 (defmethod service-providers ((service provider-list-mixin))
   (hash-table-values (service-%providers service)))

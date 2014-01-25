@@ -54,4 +54,12 @@
    #:register-provider/function)
 
   (:documentation
-   "TODO"))
+   "This package contains functions and classes for defining, using
+    and introspecting services and providers thereof.
+
+    For services, the most important functions and macros are
+    `find-service' and `define-service'.
+
+    For providers, the most important functions and macros are
+    `find-provider', `make-provider', `register-provider/class' and
+    `register-provider/funtion'."))

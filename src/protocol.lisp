@@ -34,8 +34,17 @@
    "Find and return the service designated by the `service-designator'
     NAME.
 
-    TODO IF-DOES-NOT-EXIST controls the behavior in case the
-    designated service cannot be found.
+    IF-DOES-NOT-EXIST controls the behavior in case the designated
+    service cannot be found:
+
+      The values #'error and 'error cause a `missing-service-error' to
+      be signaled.
+
+      The values #'warn and 'warn cause a `missing-service-warning' to
+      be signaled and nil to be returned.
+
+      The value nil causes nil to be returned without any conditions
+      being signaled.
 
     `retry' and `use-value' restarts are established around error
     signaling (if IF-DOES-NOT-EXIST mandates that).
@@ -77,7 +86,7 @@
 ;;; TODO(jmoringe, 2012-12-16): move to suitable file
 
 (defvar *services* (make-hash-table)
-  "TODO(jmoringe): document")
+  "Stores a mapping of service names to service objects.")
 
 (defmethod find-service ((name symbol)
                          &key
@@ -144,10 +153,25 @@
                            &key
                            if-does-not-exist)
   (:documentation
-   "TODO(jmoringe): document
+   "Find and return the provider designated by the
+    `provider-designator' PROVIDER in the service designated by the
+    `service-designator' SERVICE.
 
-    TODO IF-DOES-NOT-EXIST controls the behavior in case SERVICE or
-    PROVIDER cannot be found.
+    IF-DOES-NOT-EXIST controls the behavior in case SERVICE or
+    PROVIDER cannot be found:
+
+      The values #'error and 'error cause a `missing-service-error' to
+      be signaled if SERVICE cannot be found and a
+      `missing-provider-error' to be signaled if PROVIDER cannot be
+      found.
+
+      The values #'warn and 'warn cause a `missing-service-warning' to
+      be signaled if SERVICE cannot be found and a
+      `missing-provider-warning' to be signaled if PROVIDER cannot be
+      found. In both cases, nil is returned.
+
+      The value nil causes nil to be returned without any conditions
+      being signaled.
 
     `retry' and `use-value' restarts are established around error
     signaling (if IF-DOES-NOT-EXIST mandates that).
@@ -163,7 +187,7 @@
                                   if-does-not-exist)
   (:documentation
    "Set the provider designated by the `provider-designator' PROVIDER
-    in the service designated by the `service-designator' to
+    in the service designated by the `service-designator' SERVICE to
     NEW-VALUE. When non-nil, NEW-VALUE has to implement the provider
     protocol.
 
