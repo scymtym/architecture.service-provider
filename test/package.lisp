@@ -7,6 +7,7 @@
 (cl:defpackage #:service-provider.test
   (:use
    #:cl
+   #:let-plus
    #:fiveam
 
    #:service-provider)

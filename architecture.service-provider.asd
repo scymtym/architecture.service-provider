@@ -1,6 +1,6 @@
 ;;;; architecture.service-provider.asd --- System definition of architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -78,7 +78,8 @@
                               #+later (:file       "service")
                               #+later (:file       "provider")
                               (:file       "macros")
-                              #+later (:file       "compilation")))))
+                              #+later (:file       "compilation")
+                              (:file       "threads")))))
 
 (defmethod perform ((op        test-op)
                     (component (eql (find-system :architecture.service-provider-test))))
