@@ -208,11 +208,12 @@
     `provider-designator' PROVIDER of the service designated by the
     `service-designator' SERVICE."))
 
-(defgeneric make-provider-form (service provider &rest args)
+(defgeneric make-provider-form (service provider args environment)
   (:documentation
    "Return a form which makes and returns an instance of the provider
     designated by the `provider-designator' PROVIDER of the service
-    designated by the `service-designator' SERVICE."))
+    designated by the `service-designator' SERVICE for ARGS and
+    ENVIRONMENT."))
 
 ;; Default behavior
 
@@ -299,13 +300,15 @@
 
 ;;; TODO(jmoringe, 2012-12-23): avoid redundancy
 
-(defmethod make-provider-form ((service  symbol)
-                               (provider t)
-                               &rest args)
-  (apply #'make-provider-form (find-service service) provider args))
+(defmethod make-provider-form ((service     symbol)
+                               (provider    t)
+                               (args        t)
+                               (environment t))
+  (make-provider-form (find-service service) provider args environment))
 
-(defmethod make-provider-form ((service  t)
-                               (provider symbol)
-                               &rest args)
-  (apply #'make-provider-form service
-         (find-provider service provider) args))
+(defmethod make-provider-form ((service     t)
+                               (provider    symbol)
+                               (args        t)
+                               (environment t))
+  (make-provider-form service (find-provider service provider)
+                      args environment))

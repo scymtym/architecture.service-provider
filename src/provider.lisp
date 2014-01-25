@@ -34,7 +34,8 @@
 
 (defmethod make-provider-form ((service     t)
                                (provider    class-provider)
-                               &rest args)
+                               (args        list)
+                               (environment t))
   `(make-instance ,(class-name (provider-class provider)) ,@args))
 
 (defmethod print-object ((object class-provider) stream)
@@ -71,9 +72,10 @@
                           &rest args)
   (apply (provider-function provider) args))
 
-(defmethod make-provider-form ((service  t)
-                               (provider function-provider)
-                               &rest args)
+(defmethod make-provider-form ((service     t)
+                               (provider    function-provider)
+                               (args        list)
+                               (environment t))
   ;; TODO try to obtain the function name here? what about lambdas?
   ;; we could have three slots: symbol, body, function with symbol,
   ;; body mutually exclusive?
