@@ -1,6 +1,6 @@
 ;;;; macros.lisp --- Macros provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -143,18 +143,18 @@
    The `cl:documentation' of CLASS is used as the documentation of the
    provider.")
 
-(define-register-function register-provider/function ((function provider-name))
-  :required-initargs      (:function function)
+(define-register-function register-provider/function ((function-name provider-name))
+  :required-initargs      (:function-name function-name)
   :default-provider-class function-provider
   :documentation
-  "Register FUNCTION as the provider named PROVIDER-NAME of the
+  "Register FUNCTION-NAME as the provider named PROVIDER-NAME of the
    service designated by SERVICE-NAME.
 
    PROVIDER-CLASS can be used to select the class of which the created
    provider should be an instance.
 
-   The `cl:documentation' of FUNCTION is used as the documentation of
-   the provider.")
+   The `cl:documentation' of FUNCTION-NAME is used as the
+   documentation of the provider.")
 
 (defmacro define-provider-class ((service-name provider-name)
                                  direct-superclasses
@@ -180,10 +180,14 @@
      &body body)
   "TODO(jmoringe): document"
   `(progn
+     (declaim (inline ,function-name))    ; save inlining data
      (defun ,function-name ,args ,@body)
+     (declaim (notinline ,function-name)) ; but do not generally force inlining
 
      (register-provider/function
-      ',service-name ',provider-name :function ',function-name)))
+      ',service-name ',provider-name
+      :function-name     ',function-name
+      :lambda-expression '(lambda ,args ,@body))))
 
 (defun %provider-name->function-name (service-name provider-name)
   (declare (type service-designator  service-name)

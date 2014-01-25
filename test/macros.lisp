@@ -110,14 +110,14 @@
 
   ;; Test registering and finding a simple provider.
   (with-service (foo)
-    (register-provider/function 'foo :mock :function 'mock-provider)
+    (register-provider/function 'foo :mock :function-name 'mock-provider)
     (is (equal :mock (provider-name (find-provider 'foo :mock)))))
 
   ;; Test registering and finding a provider of a specialized class.
   (with-service (foo)
     (register-provider/function 'foo :mock
                                 :provider-class 'specialized-function-provider
-                                :function       'mock-provider)
+                                :function-name  'mock-provider)
     (is (equal :mock (provider-name (find-provider 'foo :mock))))
     (is (eq (find-class 'specialized-function-provider)
             (class-of (find-provider 'foo :mock) )))))
@@ -128,7 +128,7 @@
 
   (signals missing-service-error
     (register-provider/function :no-such-service :does-not-matter
-      :function 'mock-provider)))
+      :function-name 'mock-provider)))
 
 #+no (define-provider (foo bar)
          (class :class 'bar))

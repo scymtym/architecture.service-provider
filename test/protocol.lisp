@@ -38,7 +38,7 @@
   "Smoke test for the service-providers{,/alist,/plist} functions."
 
   (with-service (:mock1)
-    (register-provider/function :mock1 :mock2 :function 'list)
+    (register-provider/function :mock1 :mock2 :function-name 'list)
     (let ((provider (find-provider :mock1 :mock2)))
 
       (is (equal (list provider)
@@ -158,7 +158,7 @@
          `(with-service (:mock) ,@body))
        (test-case/with-mock-provider (&body body)
          `(test-case
-           (register-provider/function :mock :mock2 :function 'list)
+           (register-provider/function :mock :mock2 :function-name 'list)
            ,@body)))
 
     ;; When an attempt is made to remove a non-existent provider, a
