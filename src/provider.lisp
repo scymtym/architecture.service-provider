@@ -39,8 +39,11 @@
   `(make-instance ,(class-name (provider-class provider)) ,@args))
 
 (defmethod print-object ((object class-provider) stream)
-  (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~A" (class-name (provider-class object)))))
+  (let+ (((&structure-r/o provider- name class) object)
+         (class-name (class-name class)))
+    (print-unreadable-object (object stream :type t :identity t)
+      (format stream "~A~@[ [~S]~]"
+              name (unless (eq name class-name) class-name)))))
 
 (defmethod documentation ((slotd class-provider) (doc-type (eql t)))
   (documentation (provider-class slotd) t))
@@ -82,8 +85,10 @@
   `(,(provider-function provider) ,@args))
 
 (defmethod print-object ((object function-provider) stream)
-  (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~A" (provider-function object))))
+  (let+ (((&structure-r/o provider- name function) object))
+    (print-unreadable-object (object stream :type t :identity t)
+      (format stream "~A~@[ [~S]~]"
+              name (unless (eq name function) function)))))
 
 (defmethod documentation ((slotd function-provider) (doc-type (eql t)))
   (documentation (provider-function slotd) 'function))
