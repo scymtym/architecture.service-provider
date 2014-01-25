@@ -11,7 +11,7 @@
 (defclass class-provider (name-mixin)
   ((name  :reader   provider-name)
    (class :type     class
-          :reader   class-provider-class
+          :reader   provider-class
           :documentation
           "Stores the class providing the service."))
   (:default-initargs
@@ -30,26 +30,26 @@
 (defmethod make-provider ((service  t)
                           (provider class-provider)
                           &rest args)
-  (apply #'make-instance (class-provider-class provider) args))
+  (apply #'make-instance (provider-class provider) args))
 
-(defmethod make-provider-form ((service  t)
-                               (provider class-provider)
+(defmethod make-provider-form ((service     t)
+                               (provider    class-provider)
                                &rest args)
-  `(make-instance ,(class-name (class-provider-class provider)) ,@args))
+  `(make-instance ,(class-name (provider-class provider)) ,@args))
 
 (defmethod print-object ((object class-provider) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~A" (class-name (class-provider-class object)))))
+    (format stream "~A" (class-name (provider-class object)))))
 
 (defmethod documentation ((slotd class-provider) (doc-type (eql t)))
-  (documentation (class-provider-class slotd) t))
+  (documentation (provider-class slotd) t))
 
 ;;; `function-provider'
 
 (defclass function-provider (name-mixin)
   ((name     :reader   provider-name)
    (function :type     (or symbol function)
-             :reader   function-provider-function
+             :reader   provider-function
              :documentation
              "Stores the function providing the service."))
   (:default-initargs
@@ -69,7 +69,7 @@
 (defmethod make-provider ((service  t)
                           (provider function-provider)
                           &rest args)
-  (apply (function-provider-function provider) args))
+  (apply (provider-function provider) args))
 
 (defmethod make-provider-form ((service  t)
                                (provider function-provider)
@@ -77,11 +77,11 @@
   ;; TODO try to obtain the function name here? what about lambdas?
   ;; we could have three slots: symbol, body, function with symbol,
   ;; body mutually exclusive?
-  `(,(function-provider-function provider) ,@args))
+  `(,(provider-function provider) ,@args))
 
 (defmethod print-object ((object function-provider) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~A" (function-provider-function object))))
+    (format stream "~A" (provider-function object))))
 
 (defmethod documentation ((slotd function-provider) (doc-type (eql t)))
-  (documentation (function-provider-function slotd) 'function))
+  (documentation (provider-function slotd) 'function))

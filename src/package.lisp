@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -45,6 +45,14 @@
 
    #:find-provider                  ; also setf
    #:make-provider)
+
+  ;; Class provider protocol
+  (:export
+   #:provider-class)
+
+  ;; function provider protocol
+  (:export
+   #:provider-function)
 
   ;; Macros
   (:export
