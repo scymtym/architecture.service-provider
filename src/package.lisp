@@ -11,6 +11,11 @@
    #:let-plus
    #:more-conditions)
 
+  ;; Types
+  (:export
+   #:service-designator
+   #:provider-designator)
+
   ;; Conditions
   (:export
    #:service-provider-condition     ; superclass of all conditions
@@ -56,7 +61,7 @@
 
    #:class-provider)
 
-  ;; function provider protocol and class
+  ;; Function provider protocol and class
   (:export
    #:provider-function
 
