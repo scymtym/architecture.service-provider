@@ -82,7 +82,7 @@
    Differences:
    * =architecture.service-providers= does not tie services to classes
      (or interfaces); services and providers are identified by
-     symbols.
+     symbols (or lists of symbols).
    * Introspection is modeled after CLOS introspection, e.g.
      =cl:find-class=.
    * Documentation is modeled after and integrates =cl:defclass= and

@@ -171,14 +171,24 @@
 
      (register-provider/class ',service-name ',provider-name)))
 
-(defmacro define-provider-function ((service-name provider-name
-                                     &key
-                                     (function-name (symbolicate '#:make- provider-name)))
-                                    args
-                                    &body body)
+(defmacro define-provider-function
+    ((service-name provider-name
+      &key
+      (function-name (%provider-name->function-name
+                      service-name provider-name)))
+      args
+     &body body)
   "TODO(jmoringe): document"
   `(progn
      (defun ,function-name ,args ,@body)
 
      (register-provider/function
       ',service-name ',provider-name :function ',function-name)))
+
+(defun %provider-name->function-name (service-name provider-name)
+  (declare (type service-designator  service-name)
+           (type provider-designator provider-name))
+  (apply #'symbolicate '#:make
+         (loop :for component :in (append (ensure-list provider-name)
+                                          (ensure-list service-name))
+            :collect '#:- :collect component)))

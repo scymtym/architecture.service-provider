@@ -294,7 +294,7 @@
   (apply #'make-provider (find-service service) provider args))
 
 (defmethod make-provider ((service  t)
-                          (provider symbol)
+                          (provider t)
                           &rest args)
   (apply #'make-provider service (find-provider service provider) args))
 
@@ -307,7 +307,7 @@
   (make-provider-form (find-service service) provider args environment))
 
 (defmethod make-provider-form ((service     t)
-                               (provider    symbol)
+                               (provider    t)
                                (args        t)
                                (environment t))
   (make-provider-form service (find-provider service provider)

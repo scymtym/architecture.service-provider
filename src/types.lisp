@@ -10,6 +10,12 @@
   "A symbol designating a service."
   '(and symbol (not null)))
 
+(deftype provider-designator/symbol ()
+  '(and symbol (not null)))
+
+(deftype provider-designator/cons ()
+  '(cons provider-designator/symbol (not null)))
+
 (deftype provider-designator ()
   "A symbol designating a service provider."
-  '(and symbol (not null)))
+  '(or provider-designator/symbol provider-designator/cons))

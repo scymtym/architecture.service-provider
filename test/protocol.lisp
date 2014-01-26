@@ -93,6 +93,35 @@
 
 ;;; `find-provider' tests
 
+(test protocol.find-provider.smoke.type-error
+  "Test signaling of `type-error' when `find-provider' is called with
+   something other than a `provider-designator'."
+
+  (with-service (:mock)
+    (signals type-error (find-provider :mock nil))
+    (signals type-error (find-provider :mock (cons 1 nil)))))
+
+(test protocol.find-provider.smoke.symbol-designator
+  "Check `find-provider' works with symbols as
+   `provider-designator's."
+
+  (let ((designator :list))
+    (with-service (:mock)
+      (register-provider/function :mock designator :function 'list)
+      (is-true (find-provider :mock designator))
+      (is (eq designator (provider-name
+                          (find-provider :mock designator)))))))
+
+(test protocol.find-provider.smoke.non-symbol-designator
+  "Check `find-provider' works with lists as `provider-designator's."
+
+  (let ((designator '(:list real)))
+    (with-service (:mock)
+      (register-provider/function :mock designator :function 'list)
+      (is-true (find-provider :mock designator))
+      (is (equal designator (provider-name
+                             (find-provider :mock designator)))))))
+
 (test protocol.find-provider.conditions
   "Check conditions signaled by the `find-provider' generic function."
 

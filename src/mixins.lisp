@@ -10,7 +10,7 @@
 
 (defclass name-mixin ()
   ((name :initarg  :name
-         :type     symbol
+         :type     provider-designator
          :documentation
          "Stores the name of the service or provider."))
   (:default-initargs
@@ -37,7 +37,7 @@
 (defclass provider-list-mixin ()
   ((providers :type     hash-table
               :reader   service-%providers
-              :initform (make-hash-table :test #'eq)
+              :initform (make-hash-table :test #'equal)
               :documentation
               "Associate provider names to provider instances."))
   (:documentation
@@ -53,29 +53,54 @@
 (defmethod service-providers/plist ((service provider-list-mixin))
   (hash-table-plist (service-%providers service)))
 
-(defmethod find-provider ((service  provider-list-mixin)
-                          (provider symbol)
-                          &key
-                          if-does-not-exist)
-  (declare (ignore if-does-not-exist))
+(macrolet
+    ((define-find-provider (specializer checked-type)
+       `(defmethod find-provider ((service  provider-list-mixin)
+                                  (provider ,specializer)
+                                  &key
+                                  if-does-not-exist)
+          (declare (ignore if-does-not-exist))
+          (check-type provider ,checked-type)
 
-  (values (gethash provider (service-%providers service))))
+          (values (gethash provider (service-%providers service))))))
 
-(defmethod (setf find-provider) ((new-value t)
-                                 (service   provider-list-mixin)
-                                 (provider  symbol)
-                                 &key
-                                 if-does-not-exist)
-  (declare (ignore if-does-not-exist))
+  (define-find-provider symbol provider-designator/symbol)
+  (define-find-provider cons   provider-designator/cons))
 
-  (setf (gethash provider (service-%providers service))
-        new-value))
+(macrolet
+    ((define-setf-find-provider (specializer checked-type)
+       `(defmethod (setf find-provider) ((new-value t)
+                                         (service   provider-list-mixin)
+                                         (provider  ,specializer)
+                                         &key
+                                         if-does-not-exist)
+          (declare (ignore if-does-not-exist))
+          (check-type provider ,checked-type)
 
-(defmethod (setf find-provider) ((new-value (eql nil))
-                                 (service   provider-list-mixin)
-                                 (provider  symbol)
-                                 &key
-                                 if-does-not-exist)
+          (setf (gethash provider (service-%providers service))
+                new-value))))
+
+  (define-setf-find-provider symbol provider-designator/symbol)
+  (define-setf-find-provider cons   provider-designator/cons))
+
+(macrolet
+    ((define-setf-find-provider (specializer checked-type)
+       `(defmethod (setf find-provider) ((new-value (eql nil))
+                                         (service   provider-list-mixin)
+                                         (provider  ,specializer)
+                                         &key
+                                         if-does-not-exist)
+          (check-type provider ,checked-type)
+
+          (%remove-provider provider service if-does-not-exist)
+          new-value)))
+
+  (define-setf-find-provider symbol provider-designator/symbol)
+  (define-setf-find-provider cons   provider-designator/cons))
+
+(defun %remove-provider (provider service if-does-not-exist)
+  (declare (type provider-list-mixin service))
+
   (let ((providers (service-%providers service)))
     (unless (gethash provider providers)
       (error-behavior-restart-case
@@ -84,6 +109,4 @@
             :service    service
             :designator provider)
            :warning-condition missing-provider-warning)))
-
-    (remhash provider providers)
-    new-value))
+    (remhash provider providers)))
