@@ -39,6 +39,10 @@
 
    #:find-service)                  ; also setf
 
+  ;; Standard Service
+  (:export
+   #:standard-service)
+
   ;; Provider Protocol
   (:export
    #:provider-name
@@ -46,13 +50,17 @@
    #:find-provider                  ; also setf
    #:make-provider)
 
-  ;; Class provider protocol
+  ;; Class provider protocol and class
   (:export
-   #:provider-class)
+   #:provider-class
 
-  ;; function provider protocol
+   #:class-provider)
+
+  ;; function provider protocol and class
   (:export
-   #:provider-function)
+   #:provider-function
+
+   #:function-provider)
 
   ;; Macros
   (:export

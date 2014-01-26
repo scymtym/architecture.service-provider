@@ -77,7 +77,7 @@
               (find-service ',service)))))
 
     ;; Create the missing service and retry.
-    (let ((service (make-instance 'service-provider::standard-service
+    (let ((service (make-instance 'standard-service
                                   :name 'no-such-service)))
       (is (eq service
               (with-restart-fixture (no-such-service)

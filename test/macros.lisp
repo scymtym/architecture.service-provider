@@ -10,7 +10,7 @@
 
 ;;; `define-service' tests
 
-(defclass specialized-service (service-provider::standard-service)
+(defclass specialized-service (standard-service)
   ())
 
 (test macros.define-service.smoke
@@ -63,7 +63,7 @@
             (class-of (find-service 'foo)) ))
 
     (define-service foo)
-    (is (eq (find-class 'service-provider::standard-service)
+    (is (eq (find-class 'standard-service)
             (class-of (find-service 'foo))))))
 
 ;;; `register-provider/class'
@@ -71,7 +71,7 @@
 (defclass mock-provider ()
   ())
 
-(defclass specialized-class-provider (service-provider::class-provider)
+(defclass specialized-class-provider (class-provider)
   ())
 
 (test macros.register-provider/class.smoke
@@ -102,7 +102,7 @@
 
 (defun mock-provider ())
 
-(defclass specialized-function-provider (service-provider::function-provider)
+(defclass specialized-function-provider (function-provider)
   ())
 
 (test macros.register-provider/function.smoke
