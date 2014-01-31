@@ -77,8 +77,7 @@
           (declare (ignore if-does-not-exist))
           (check-type provider ,checked-type)
 
-          (setf (gethash provider (service-%providers service))
-                new-value))))
+          (%add-or-update-provider service provider new-value))))
 
   (define-setf-find-provider symbol provider-designator/symbol)
   (define-setf-find-provider cons   provider-designator/cons))
@@ -92,21 +91,46 @@
                                          if-does-not-exist)
           (check-type provider ,checked-type)
 
-          (%remove-provider provider service if-does-not-exist)
+          (%remove-provider service provider if-does-not-exist)
           new-value)))
 
   (define-setf-find-provider symbol provider-designator/symbol)
   (define-setf-find-provider cons   provider-designator/cons))
 
-(defun %remove-provider (provider service if-does-not-exist)
+(defmethod update-provider ((service  provider-list-mixin)
+                            (name     t)
+                            (provider t))
+  (setf (gethash name (service-%providers service)) provider))
+
+(defmethod add-provider ((service  provider-list-mixin)
+                         (name     t)
+                         (provider t))
+  (setf (gethash name (service-%providers service)) provider))
+
+(defmethod remove-provider ((service  provider-list-mixin)
+                            (name     t)
+                            (provider t))
+  (remhash name (service-%providers service)))
+
+;;; Utility functions
+
+(defun %add-or-update-provider (service name provider)
   (declare (type provider-list-mixin service))
 
-  (let ((providers (service-%providers service)))
-    (unless (gethash provider providers)
+  (if (find-provider service name :if-does-not-exist nil)
+      (update-provider service name provider)
+      (add-provider service name provider)))
+
+(defun %remove-provider (service name if-does-not-exist)
+  (declare (type provider-list-mixin service))
+
+  (let* ((providers (service-%providers service))
+         (provider  (gethash name providers)))
+    (unless provider
       (error-behavior-restart-case
           (if-does-not-exist
            (missing-provider-error
             :service    service
             :designator provider)
            :warning-condition missing-provider-warning)))
-    (remhash provider providers)))
+    (remove-provider service name provider)))

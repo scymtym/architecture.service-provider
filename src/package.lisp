@@ -42,7 +42,11 @@
    #:service-providers/alist
    #:service-providers/plist
 
-   #:find-service)                  ; also setf
+   #:find-service                   ; also setf
+
+   #:update-provider
+   #:add-provider
+   #:remove-provider)
 
   ;; Standard Service
   (:export

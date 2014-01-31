@@ -202,6 +202,19 @@
     controls whether an error should be signaled in case the
     to-be-removed provider does not exist."))
 
+(defgeneric update-provider (service name provider)
+  (:documentation
+   "Update the provider designated by NAME in SERVICE with the new
+    value PROVIDER."))
+
+(defgeneric add-provider (service name provider)
+  (:documentation
+   "Add PROVIDER to SERVICE as the provider designated by NAME."))
+
+(defgeneric remove-provider (service name provider)
+  (:documentation
+   "Remove PROVIDER from SERVICE as the provider designated by NAME."))
+
 (defgeneric make-provider (service provider &rest args)
   (:documentation
    "Make and return an instance of the provider designated by the
