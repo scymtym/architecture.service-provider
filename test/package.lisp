@@ -7,6 +7,8 @@
 (cl:defpackage #:service-provider.test
   (:use
    #:cl
+   #:alexandria
+   #:let-plus
    #:fiveam
 
    #:service-provider)
