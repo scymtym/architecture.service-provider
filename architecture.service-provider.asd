@@ -1,6 +1,6 @@
 ;;;; architecture.service-provider.asd --- System definition of architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -81,4 +81,4 @@
 
 (defmethod perform ((op        test-op)
                     (component (eql (find-system :architecture.service-provider-test))))
-  (uiop:symbol-call :service-provider.test "RUN-TESTS"))
+  (funcall (read-from-string "service-provider.test:run-tests")))
