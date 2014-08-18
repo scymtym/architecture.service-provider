@@ -1,6 +1,6 @@
 ;;;; provider.lisp --- Builtin provider classes.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2016 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -37,7 +37,7 @@
                                (provider    class-provider)
                                (args        list)
                                (environment t))
-  `(make-instance ,(class-name (provider-class provider)) ,@args))
+  `(make-instance ',(class-name (provider-class provider)) ,@args))
 
 (defmethod print-items:print-items append ((object class-provider))
   (%provider-print-items (provider-name object)
