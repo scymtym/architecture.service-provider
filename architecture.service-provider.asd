@@ -65,10 +65,12 @@
   :license     "LLGPLv3" ; see COPYING file for details.
   :description "Unit tests of the service-provider system."
   :depends-on  (:alexandria
-                (:version :let-plus "0.2")
+                (:version :let-plus                      "0.2")
                 :more-conditions
 
-                (:version :fiveam   "1.1"))
+                (:version :fiveam                        "1.1")
+
+                (:version :architecture.service-provider #.(version/string)))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
