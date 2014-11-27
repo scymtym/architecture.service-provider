@@ -10,26 +10,27 @@
 
 (defgeneric service-change-hook (service) ; TODO export?
   (:documentation
-   "Return the change hook object for SERVICE."))
+   "Return the change hook object for SERVICE.
+
+    The lambda-list of handlers has to be compatible to
+
+      (EVENT NAME PROVIDER)
+
+    where EVENT is one of :provider-updated, :provider-added
+    or :provider-removed, NAME is a `provider-designator' and PROVIDER
+    is the affected provider object."))
 
 ;;; `change-hook-mixin'
 
 (defclass change-hook-mixin ()
-  ((change-hook :type     list
+  ((change-hook :type     list #| of function |#
                 :initform '()
                 :documentation
                 "Stores a list of handlers which should be called when
                  providers are redefined, added or removed.
 
-                 The lambda-list of handlers has to be compatible
-                 to
-
-                   (EVENT NAME PROVIDER)
-
-                 where EVENT is one
-                 of :provider-updated, :provider-added
-                 or :provider-removed, NAME is a `provider-designator'
-                 and PROVIDER is the affected provider object. "))
+                 See `service-change-hook' for a description of
+                 acceptable handlers."))
   (:documentation
    "This mixin class add to service classes a hook which is run
     whenever a provider of the service is redefined, added or
