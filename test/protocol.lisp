@@ -150,6 +150,38 @@
     (is (null (find-provider :mock 'no-such-provider
                              :if-does-not-exist nil)))))
 
+(test protocol.find-provider.restarts
+  "Check restarts established by the `find-provider' generic function."
+
+  (with-service (:mock)
+    (macrolet
+        ((with-restart-fixture ((provider) &body body)
+           `(handler-bind
+                ((missing-provider-error (lambda (condition)
+                                           (declare (ignorable condition))
+                                           ,@body)))
+              (find-provider :mock ',provider))))
+
+      (let ((provider (make-instance 'function-provider
+                                     :name     'no-such-provider
+                                     :function 'car)))
+        ;; Register the missing provider and retry.
+        (is (eq provider
+                (with-restart-fixture (no-such-provider)
+                  (let ((restart (find-restart 'retry condition)))
+                    (is (typep restart 'restart))
+                    (does-not-signal error (princ-to-string restart))
+                    (setf (find-provider :mock 'no-such-provider) provider)
+                    (invoke-restart restart)))))
+
+        ;; Use an arbitrary value instead of the missing service.
+        (is (eq provider
+                (with-restart-fixture (no-such-provider)
+                  (let ((restart (find-restart 'use-value condition)))
+                    (is (typep restart 'restart))
+                    (does-not-signal error (princ-to-string restart))
+                    (invoke-restart 'restart provider)))))))))
+
 (test protocol.find-provider.undefinition
   "Test undefining providers via (setf (find-provider ...) nil)."
 

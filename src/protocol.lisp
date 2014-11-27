@@ -238,46 +238,27 @@
       ((recur ()
          (or (call-next-method service provider
                                :if-does-not-exist if-does-not-exist)
-             #+later (error-behavior-restart-case
-                (if-does-not-exist
-                 (missing-service-error
-                  :service    service
-                  :designator provider)
-                 :warning-condition missing-service-warning)
-              (retry ()
-                (recur))
-              (use-value (value)
-                value))
-             (etypecase if-does-not-exist
-               (null
-                nil)
-               (function
-                (restart-case
-                    (funcall if-does-not-exist
-                             (make-condition
-                              (cond
-                                ((member if-does-not-exist `(warn ,#'warn))
-                                 'missing-provider-warning)
-                                (t
-                                 'missing-provider-error))
-                              :service    service
-                              :designator provider))
-                  (retry () ;;; TODO(jmoringe, 2012-09-03): who should establish the restart?
-                    :report (lambda (stream)
-                              (format stream "~@<Retry finding the ~
-                                                 provider of service ~
-                                                 ~A designated by ~
-                                                 ~S.~@:>"
-                                      service provider))
-                    (recur))
-                  (use-value (value)
-                    :report (lambda (stream)
-                              (format stream "~@<Specify a value which ~
-                                                 should be used as the ~
-                                                 provider of service ~
-                                                 ~A designated by ~S.~@:>"
-                                      service provider))
-                    value)))))))
+             (error-behavior-restart-case
+                 (if-does-not-exist
+                  (missing-provider-error
+                   :service    service
+                   :designator provider)
+                  :warning-condition missing-provider-warning)
+               (retry () ; TODO(jmoringe, 2012-09-03): who should establish the restart?
+                 :report (lambda (stream)
+                           (format stream "~@<Retry finding the ~
+                                           provider of service ~A ~
+                                           designated by ~S.~@:>"
+                                   service provider))
+                 (recur))
+               (use-value (value)
+                 :report (lambda (stream)
+                           (format stream "~@<Specify a value which ~
+                                           should be used as the ~
+                                           provider of service ~A ~
+                                           designated by ~S.~@:>"
+                                   service provider))
+                 value)))))
     ;; This avoids multiple warnings when IF-DOES-NOT-EXIST is `warn'.
     (if (symbolp service)
         (call-next-method service provider
