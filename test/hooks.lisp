@@ -48,6 +48,11 @@
       (check-call (calls 3) (:provider-updated foo function-provider))
 
       (setf (find-provider :mock 'foo) nil)
+      (check-call (calls 4) (:provider-removed foo function-provider))
+
+      ;; Attempting to remove a non-existent provider should not run
+      ;; hooks.
+      (setf (find-provider :mock 'bar :if-does-not-exist nil) nil)
       (check-call (calls 4) (:provider-removed foo function-provider)))))
 
 (defclass hooks.smoke.provider-class () ())
@@ -72,5 +77,11 @@
             (:provider-updated hooks.smoke.provider-class class-provider))
 
           (setf (find-provider :mock 'hooks.smoke.provider-class) nil)
+          (check-call (calls 4)
+            (:provider-removed hooks.smoke.provider-class class-provider))
+
+          ;; Attempting to remove a non-existent provider should not
+          ;; run hooks.
+          (setf (find-provider :mock 'bar :if-does-not-exist nil) nil)
           (check-call (calls 4)
             (:provider-removed hooks.smoke.provider-class class-provider)))))

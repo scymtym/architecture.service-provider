@@ -126,11 +126,11 @@
 
   (let* ((providers (service-%providers service))
          (provider  (gethash name providers)))
-    (unless provider
-      (error-behavior-restart-case
-          (if-does-not-exist
-           (missing-provider-error
-            :service    service
-            :designator provider)
-           :warning-condition missing-provider-warning)))
-    (remove-provider service name provider)))
+    (if provider
+        (remove-provider service name provider)
+        (error-behavior-restart-case
+            (if-does-not-exist
+             (missing-provider-error
+              :service    service
+              :designator name)
+             :warning-condition missing-provider-warning)))))
