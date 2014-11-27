@@ -17,7 +17,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details.
   :description "Run hooks when service providers change."
   :depends-on  (:cl-hooks
 
@@ -30,7 +30,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details.
   :description "Unit tests of the architecture.service-provider-and-hooks system."
   :depends-on  (:alexandria
 

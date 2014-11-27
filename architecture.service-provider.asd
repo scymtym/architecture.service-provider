@@ -40,7 +40,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details.
   :description "Provides a framework for registering and finding services and providers of these."
   :depends-on  (:alexandria
                 (:version :let-plus        "0.2")
@@ -62,7 +62,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details.
   :description "Unit tests of the service-provider system."
   :depends-on  (:alexandria
                 (:version :let-plus "0.2")
