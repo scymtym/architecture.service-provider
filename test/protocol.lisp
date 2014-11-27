@@ -76,20 +76,24 @@
                                           ,@body)))
               (find-service ',service)))))
 
-    ;; Create the missing service and retry.
     (let ((service (make-instance 'standard-service
                                   :name 'no-such-service)))
+      ;; Create the missing service and retry.
       (is (eq service
               (with-restart-fixture (no-such-service)
-                (is (find-restart 'retry condition))
-                (setf (find-service 'no-such-service) service)
-                (invoke-restart 'retry)))))
+                (let ((restart (find-restart 'retry condition)))
+                  (is (typep restart 'restart))
+                  (does-not-signal error (princ-to-string restart))
+                  (setf (find-service 'no-such-service) service)
+                  (invoke-restart restart)))))
 
-    ;; Use an arbitrary value instead of the missing service.
-    (is (eq :foo
-            (with-restart-fixture (no-such-service)
-              (is (find-restart 'use-value condition))
-              (invoke-restart 'use-value :foo))))))
+      ;; Use an arbitrary value instead of the missing service.
+      (is (eq service
+              (with-restart-fixture (no-such-service)
+                (let ((restart (find-restart 'use-value condition)))
+                  (is (typep restart 'restart))
+                  (does-not-signal error (princ-to-string restart))
+                  (invoke-restart restart service))))))))
 
 ;;; `find-provider' tests
 
