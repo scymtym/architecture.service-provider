@@ -31,6 +31,10 @@
   This systems adds first class services and service providers to
   facilitate the above use cases while trying to avoid conceptual
   mismatches with the builtin mechanisms.
+
+  #+ATTR_HTML: :alt "build status image" :title Build Status :align right
+  [[https://travis-ci.org/scymtym/architecture.service-provider][https://travis-ci.org/scymtym/architecture.service-provider.svg]]
+
 * Tutorial
 ** STARTED Defining a Service
    #+BEGIN_SRC lisp
