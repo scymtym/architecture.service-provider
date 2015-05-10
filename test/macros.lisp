@@ -1,6 +1,6 @@
 ;;;; macros.lisp --- Unit tests for macros of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -82,6 +82,12 @@
     (register-provider/class 'foo :mock :class 'mock-provider)
     (is (equal :mock (provider-name (find-provider 'foo :mock)))))
 
+  ;; Use the service object instead of its name.
+  (with-service (foo)
+    (let ((service (find-service 'foo)))
+      (register-provider/class service :mock :class 'mock-provider)
+      (is (equal :mock (provider-name (find-provider service :mock))))))
+
   ;; Test registering and finding a provider of a specialized class.
   (with-service (foo)
     (register-provider/class 'foo :mock
@@ -112,6 +118,12 @@
   (with-service (foo)
     (register-provider/function 'foo :mock :function 'mock-provider)
     (is (equal :mock (provider-name (find-provider 'foo :mock)))))
+
+  ;; Use the service object instead of its name.
+  (with-service (foo)
+    (let ((service (find-service 'foo)))
+      (register-provider/function service :mock :function 'mock-provider)
+      (is (equal :mock (provider-name (find-provider service :mock))))))
 
   ;; Test registering and finding a provider of a specialized class.
   (with-service (foo)
