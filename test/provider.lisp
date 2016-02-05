@@ -10,7 +10,9 @@
 
 ;;; `class-provider'
 
-(defclass class-provider.mock-provider () ())
+(defclass class-provider.mock-provider () ()
+  (:documentation
+   "class-provider documentation"))
 
 (test class-provider.print
   "Test printing a `class-provider' instance."
@@ -24,9 +26,19 @@
     (test-case 'class-provider.mock-provider 'class-provider.mock-provider nil)
     (test-case 'class-provider.mock-provider 'bar                          t)))
 
+(test class-provider.documentation
+  "Test calling `documentation' on a `class-provider' instance."
+
+  (with-service (foo)
+    (let ((provider (register-provider/class
+                     'foo 'bar :class 'class-provider.mock-provider)))
+      (is (equal "class-provider documentation" (documentation provider t))))))
+
 ;;; `function-provider'
 
-(defun function-provider.mock-provider ())
+(defun function-provider.mock-provider ()
+  "function-provider documentation"
+  nil)
 
 (test function-provider.print
   "Test printing a `function-provider' instance."
@@ -39,6 +51,15 @@
                function-name name expect-class-name?)))))
     (test-case 'function-provider.mock-provider 'function-provider.mock-provider nil)
     (test-case 'function-provider.mock-provider 'bar                             t)))
+
+(test function-provider.documentation
+  "Test calling `documentation' on a `function-provider' instance."
+
+  (with-service (foo)
+    (let ((provider (register-provider/function
+                     'foo 'bar :function 'function-provider.mock-provider)))
+      (is (equal "function-provider documentation"
+                 (documentation provider t))))))
 
 ;;; Utilities
 
