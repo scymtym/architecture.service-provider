@@ -1,6 +1,6 @@
 ;;;; architecture.service-provider.asd --- System definition of architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -43,8 +43,9 @@
   :license     "LLGPLv3" ; see COPYING file for details.
   :description "Provides a framework for registering and finding services and providers of these."
   :depends-on  (:alexandria
-                (:version :let-plus        "0.2")
-                (:version :more-conditions "0.3.0"))
+                (:version :let-plus              "0.2")
+                (:version :more-conditions       "0.3.0")
+                (:version :utilities.print-items "0.1.0"))
   :components  ((:module     "src"
                  :serial     t
                  :components ((:file       "package")
@@ -76,8 +77,8 @@
                  :components ((:file       "package")
                               (:file       "protocol")
                               #+later (:file       "mixins")
-                              #+later (:file       "service")
-                              #+later (:file       "provider")
+                              (:file       "service")
+                              (:file       "provider")
                               (:file       "macros")
                               #+later (:file       "compilation")))))
 

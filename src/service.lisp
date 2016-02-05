@@ -1,6 +1,6 @@
 ;;;; service.lisp --- Service classes provided by the service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -10,18 +10,18 @@
 
 (defclass standard-service (name-mixin
                             documentation-mixin
-                            provider-list-mixin)
+                            provider-list-mixin
+                            print-items:print-items-mixin)
   ((name :reader   service-name))
   (:documentation
    "This class provides a basic implementation of the service
     protocol. It can be used as a superclass for specialized service
     classes."))
 
-(defmethod print-object ((object standard-service) stream)
-  (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~S (~D)"
-            (service-name object)
-            (length (service-providers object)))))
+(defmethod print-items:print-items append ((object standard-service))
+  `((:name           ,(service-name object)               "~S")
+    (:provider-count ,(length (service-providers object)) " (~D)"
+                     ((:after :name)))))
 
 (defmethod describe-object ((object standard-service) stream)
   (format stream "~A~@[~2&Providers:~&~{~A~^~&~}~]"

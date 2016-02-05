@@ -1,6 +1,6 @@
 ;;;; provider.lisp --- Builtin provider classes.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -8,7 +8,8 @@
 
 ;;; `class-provider'
 
-(defclass class-provider (name-mixin)
+(defclass class-provider (name-mixin
+                          print-items:print-items-mixin)
   ((name  :reader   provider-name)
    (class :type     class
           :reader   provider-class
@@ -38,19 +39,17 @@
                                (environment t))
   `(make-instance ,(class-name (provider-class provider)) ,@args))
 
-(defmethod print-object ((object class-provider) stream)
-  (let+ (((&structure-r/o provider- name class) object)
-         (class-name (class-name class)))
-    (print-unreadable-object (object stream :type t :identity t)
-      (format stream "~A~@[ [~S]~]"
-              name (unless (eq name class-name) class-name)))))
+(defmethod print-items:print-items append ((object class-provider))
+  (%provider-print-items (provider-name object)
+                         (class-name (provider-class object))))
 
 (defmethod documentation ((slotd class-provider) (doc-type (eql t)))
   (documentation (provider-class slotd) t))
 
 ;;; `function-provider'
 
-(defclass function-provider (name-mixin)
+(defclass function-provider (name-mixin
+                             print-items:print-items-mixin)
   ((name     :reader   provider-name)
    (function :type     (or symbol function)
              :reader   provider-function
@@ -84,11 +83,15 @@
   ;; body mutually exclusive?
   `(,(provider-function provider) ,@args))
 
-(defmethod print-object ((object function-provider) stream)
-  (let+ (((&structure-r/o provider- name function) object))
-    (print-unreadable-object (object stream :type t :identity t)
-      (format stream "~A~@[ [~S]~]"
-              name (unless (eq name function) function)))))
+(defmethod print-items:print-items append ((object function-provider))
+  (%provider-print-items (provider-name object) (provider-function object)))
 
 (defmethod documentation ((slotd function-provider) (doc-type (eql t)))
   (documentation (provider-function slotd) 'function))
+
+;;; Utilities
+
+(defun %provider-print-items (name object-name)
+  (let ((object-name (unless (eq name object-name) object-name)))
+    `((:name        ,name)
+      (:object-name ,object-name "~@[ [~S]~]" ((:after :name))))))
