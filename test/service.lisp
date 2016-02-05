@@ -15,3 +15,11 @@
     (let ((output (princ-to-string (find-service 'foo))))
       (is (search (format nil "~A" 'foo) output))
       (is (search "(0)"                  output)))))
+
+(test standard-service.describe
+  "Test calling `describe' on a `standard-service' instance."
+
+  (with-service (foo)
+    (let ((output (with-output-to-string (stream)
+                    (describe (find-service 'foo) stream))))
+      (is (search (format nil "~A" 'foo) output)))))
