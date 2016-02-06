@@ -111,7 +111,187 @@
    : "Providers of this service do stuff."
 
 ** TODO Efficiency Considerations
-* Reference
+* Dictionary
+  #+begin_src lisp :results none :exports none :session "doc"
+    (ql:quickload '(:architecture.service-provider :alexandria :split-sequence))
+    (defun doc (symbol kind)
+      (let* ((lambda-list (sb-introspect:function-lambda-list symbol))
+             (string      (documentation symbol kind))
+             (lines       (split-sequence:split-sequence #\Newline string))
+             (trimmed     (mapcar (alexandria:curry #'string-left-trim '(#\Space)) lines)))
+        (format nil "~(~A~) ~<~{~A~^ ~}~:@>~2%~{~A~^~%~}"
+                symbol (list lambda-list) trimmed)))
+  #+end_src
+** Service Protocol
+   The following generic functions operate on service objects:
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:service-name 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : service-name SERVICE
+   :
+   : Return the symbol which is the name of SERVICE.
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:service-providers 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : service-providers SERVICE
+   :
+   : Return a sequence of the providers of SERVICE.
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:service-providers/alist 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : service-providers/alist SERVICE
+   :
+   : Return the providers of SERVICE as an alist in which CARs are
+   : provider names and CDRs are the corresponding provider objects.
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:service-providers/plist 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : service-providers/plist SERVICE
+   :
+   : Return the providers of SERVICE as a plist in which keys are
+   : provider names and values are the corresponding provider
+   : objects.
+
+   The following generic functions query and manipulate the global set
+   of services:
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:find-service 'function)
+   #+END_SRC
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc '(setf service-provider:find-service) 'function)
+   #+END_SRC
+** Provider Protocol
+   The following generic functions operate on provider objects:
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:provider-name 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : provider-name PROVIDER
+   :
+   : Return the symbol which is the name of PROVIDER.
+
+   The following generic functions query and manipulate the providers
+   of a service:
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:find-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   find-provider SERVICE PROVIDER &KEY IF-DOES-NOT-EXIST IF-DOES-NOT-EXIST
+                 (IF-DOES-NOT-EXIST #'ERROR)
+
+   Find and return the provider designated by the
+   `provider-designator' PROVIDER in the service designated by the
+   `service-designator' SERVICE.
+
+   IF-DOES-NOT-EXIST controls the behavior in case SERVICE or
+   PROVIDER cannot be found:
+
+   The values #'error and 'error cause a `missing-service-error' to
+   be signaled if SERVICE cannot be found and a
+   `missing-provider-error' to be signaled if PROVIDER cannot be
+   found.
+
+   The values #'warn and 'warn cause a `missing-service-warning' to
+   be signaled if SERVICE cannot be found and a
+   `missing-provider-warning' to be signaled if PROVIDER cannot be
+   found. In both cases, nil is returned.
+
+   The value nil causes nil to be returned without any conditions
+   being signaled.
+
+   `retry' and `use-value' restarts are established around error
+   signaling (if IF-DOES-NOT-EXIST mandates that).
+
+   TODO There is a compiler-macro for this function which tries to
+   find the designated service and provider at compile-time and
+   load-time if the designators are constant. Compile- and load-time
+   `style-warning's are signaled if a constant designator cannot be
+   found.
+#+end_example
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc '(setf service-provider:find-provider) 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   (setf find-provider) NEW-VALUE SERVICE PROVIDER &KEY IF-DOES-NOT-EXIST
+                        (IF-DOES-NOT-EXIST #'WARN)
+
+   Set the provider designated by the `provider-designator' PROVIDER
+   in the service designated by the `service-designator' SERVICE to
+   NEW-VALUE. When non-nil, NEW-VALUE has to implement the provider
+   protocol.
+
+   If SERVICE and PROVIDER already designate a provider, the existing
+   provider object is replaced with NEW-VALUE.
+
+   If NEW-VALUE is nil, an existing provider designated by SERVICE
+   and PROVIDER is removed.
+
+   IF-DOES-NOT-EXIST is accepted for parity with `find-provider' and
+   usually ignored. However, when NEW-VALUE is nil, IF-DOES-NOT-EXIST
+   controls whether an error should be signaled in case the
+   to-be-removed provider does not exist.
+#+end_example
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:update-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : update-provider SERVICE NAME PROVIDER
+   :
+   : Update the provider designated by NAME in SERVICE with the new
+   : value PROVIDER.
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:add-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : add-provider SERVICE NAME PROVIDER
+   :
+   : Add PROVIDER to SERVICE as the provider designated by NAME.
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:remove-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : remove-provider SERVICE NAME PROVIDER
+   :
+   : Remove PROVIDER from SERVICE as the provider designated by NAME.
+
+   TODO
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:make-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   : make-provider SERVICE PROVIDER &REST ARGS &KEY
+   :               (DIRECTION (MISSING-REQUIRED-ARGUMENT DIRECTION))
+   :               (SCHEMA (MISSING-REQUIRED-ARGUMENT SCHEMA))
+   :
+   : Make and return an instance of the provider designated by the
+   : `provider-designator' PROVIDER of the service designated by the
+   : `service-designator' SERVICE.
+
 * TODO Related Work
 ** Java Service Provider Interface
    See [[http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html][documentation of the ServiceLoader class]] for details.
