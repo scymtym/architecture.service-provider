@@ -5,10 +5,10 @@
 #+KEYWORDS:    common lisp, architecture, service, provider, framework
 #+LANGUAGE:    en
 
-* STARTED Introduction
+* Introduction
   In software architectures, a common feature is parametrization of
   algorithms or protocols with higher order functions or classes and
-  generic function complying to a certain protocol. These places of
+  generic functions complying to a certain protocol. These places of
   potential variations can be thought of as requiring a certain
   service which can be provided by arbitrary providers (See [[*Java
   Service Provider Interface]] for a related approach).
@@ -21,28 +21,35 @@
   beyond these builtin features:
   * It is considered good practice to use something like
     =make-test-result-formatter= instead of letting clients call
-    =cl:make-instance= directly
+    =cl:make-instance= directly.
   * It is sometimes desirable to be able to enumerate all known
-    providers of a given service
-  * Compile-time analysis of instantiation requests can reveal errors
-    early or enable transformation into more efficient code
-  * Lazy loading of service providers when they are instantiated
+    providers of a given service.
+  * Compile-time analysis of provider instantiation requests can
+    reveal errors early or enable transformation into more efficient
+    code.
+  * Service providers can be loaded lazily when they are instantiated.
 
   This systems adds first class services and service providers to
-  facilitate the above use cases while trying to avoid conceptual
+  facilitate use cases like the above while trying to avoid conceptual
   mismatches with the builtin mechanisms.
 
   #+ATTR_HTML: :alt "build status image" :title Build Status :align right
   [[https://travis-ci.org/scymtym/architecture.service-provider][https://travis-ci.org/scymtym/architecture.service-provider.svg]]
 
 * Tutorial
-** STARTED Defining a Service
-   #+BEGIN_SRC lisp
+** Defining a Service
+   In the simplest case, a service is a named collection of providers
+   with an optional documentation string:
+   #+BEGIN_SRC lisp :results value :exports both
      (service-provider:define-service my-service
        (:documentation
         "Providers of this service do stuff."))
    #+END_SRC
-** STARTED Defining a Provider
+
+   #+RESULTS:
+   : #<STANDARD-SERVICE MY-SERVICE (0) {1007248B33}>
+
+** Registering a Provider
    A provider of a service can be anything for which a method on
    =service-provider:make-provider=, and optionally
    =service-provider:make-provider-form=, is defined.
@@ -57,26 +64,52 @@
 
    For example, registering a class as a provider of a service can be
    accomplished like this:
-   #+BEGIN_SRC lisp
+   #+BEGIN_SRC lisp :results value :exports both
      (defclass my-class ()
        ((foo :initarg :foo)))
 
      (service-provider:register-provider/class 'my-service 'my-class)
    #+END_SRC
-** STARTED Instantiating a Provider
+
+   #+RESULTS:
+   : #<CLASS-PROVIDER MY-CLASS {1007325293}>
+
+** Instantiating a Provider
    The primary way to instantiate a service provider is
-   =service-provider:make-provider= which resembles
-   =cl:make-instance=:
-   #+BEGIN_SRC lisp
+   =service-provider:make-provider= which resembles =cl:make-instance=
+   but takes a service and a provider designator instead of a class
+   designator:
+   #+BEGIN_SRC lisp :results value :exports both
      (service-provider:make-provider 'my-service 'my-class :foo 1)
    #+END_SRC
-** STARTED Introspecting a Service
-   Introspection of services works much like CLOS introspection:
-   #+BEGIN_SRC lisp
+
+   #+RESULTS:
+   : #<MY-CLASS {1007BCD683}>
+
+** Introspecting a Service
+   Introspection of services works much like CLOS introspection: after
+   retrieving a service object, reader functions as well as
+   =cl:describe= and =cl:documentation= can be applied to it:
+   #+BEGIN_SRC lisp :results output :exports both
      (let ((service (service-provider:find-service 'my-service)))
        (print (list (service-provider:service-name service)
-                    (service-provider:service-providers service))))
+                    (service-provider:service-providers service)))
+       (fresh-line)
+       (describe service)
+       (fresh-line)
+       (print (documentation service t)))
    #+END_SRC
+
+   #+RESULTS:
+   :
+   : (MY-SERVICE (#<CLASS-PROVIDER MY-CLASS {100EEF8AC3}>))
+   : #1=#<STANDARD-SERVICE MY-SERVICE (1) {100ED79C73}>
+   :
+   : Providers:
+   : #1=#<CLASS-PROVIDER MY-CLASS {100EEF8AC3}>
+   :
+   : "Providers of this service do stuff."
+
 ** TODO Efficiency Considerations
 * Reference
 * TODO Related Work
