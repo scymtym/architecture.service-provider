@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Unit tests for the protocol functions of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -157,34 +157,35 @@
 (test protocol.find-provider.restarts
   "Check restarts established by the `find-provider' generic function."
 
-  (with-service (:mock)
-    (macrolet
-        ((with-restart-fixture ((provider) &body body)
-           `(handler-bind
-                ((missing-provider-error (lambda (condition)
-                                           (declare (ignorable condition))
-                                           ,@body)))
-              (find-provider :mock ',provider))))
+  (macrolet
+      ((with-restart-fixture ((provider) &body body)
+         `(handler-bind
+              ((missing-provider-error (lambda (condition)
+                                         (declare (ignorable condition))
+                                         ,@body)))
+            (find-provider :mock ',provider))))
 
-      (let ((provider (make-instance 'function-provider
-                                     :name     'no-such-provider
-                                     :function 'car)))
-        ;; Register the missing provider and retry.
+    (let ((provider (make-instance 'function-provider
+                                   :name     'no-such-provider
+                                   :function 'car)))
+      ;; Register the missing provider and retry.
+      (with-service (:mock)
         (is (eq provider
                 (with-restart-fixture (no-such-provider)
                   (let ((restart (find-restart 'retry condition)))
                     (is (typep restart 'restart))
                     (does-not-signal error (princ-to-string restart))
                     (setf (find-provider :mock 'no-such-provider) provider)
-                    (invoke-restart restart)))))
+                    (invoke-restart restart))))))
 
-        ;; Use an arbitrary value instead of the missing service.
+      ;; Use an arbitrary value instead of the missing service.
+      (with-service (:mock)
         (is (eq provider
                 (with-restart-fixture (no-such-provider)
                   (let ((restart (find-restart 'use-value condition)))
                     (is (typep restart 'restart))
                     (does-not-signal error (princ-to-string restart))
-                    (invoke-restart 'restart provider)))))))))
+                    (invoke-restart restart provider)))))))))
 
 (test protocol.find-provider.undefinition
   "Test undefining providers via (setf (find-provider ...) nil)."
