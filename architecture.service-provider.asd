@@ -4,42 +4,10 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:architecture.service-provider-system
-  (:use
-   #:cl
-   #:asdf)
-
-  (:export
-   #:version/list
-   #:version/string))
-
-(cl:in-package #:architecture.service-provider-system)
-
-;;; Version stuff
-
-(defparameter +version-major+ 0
-  "Major component of version number.")
-
-(defparameter +version-minor+ 1
-  "Minor component of version number.")
-
-(defparameter +version-revision+ 0
-  "Revision component of version number.")
-
-(defun version/list ()
-  "Return a version of the form (MAJOR MINOR REVISION)."
-  (list +version-major+ +version-minor+ +version-revision+))
-
-(defun version/string ()
-  "Return a version string of the form \"MAJOR.MINOR.REVISION\"."
-  (format nil "~{~A.~A.~A~}" (version/list)))
-
-;;; System definitions
-
 (defsystem :architecture.service-provider
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     #.(version/string)
+  :version     (:read-file-form "version-string.sexp")
   :license     "LLGPLv3" ; see COPYING file for details.
   :description "Provides a framework for registering and finding services and providers of these."
   :depends-on  (:alexandria
@@ -62,7 +30,7 @@
 (defsystem :architecture.service-provider-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     #.(version/string)
+  :version     (:read-file-form "version-string.sexp")
   :license     "LLGPLv3" ; see COPYING file for details.
   :description "Unit tests of the service-provider system."
   :depends-on  (:alexandria
@@ -71,7 +39,7 @@
 
                 (:version :fiveam                        "1.1")
 
-                (:version :architecture.service-provider #.(version/string)))
+                (:version :architecture.service-provider (:read-file-form "version-string.sexp")))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
