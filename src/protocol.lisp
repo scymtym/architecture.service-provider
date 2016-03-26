@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Protocol provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -91,8 +91,10 @@
 (defmethod find-service ((name symbol)
                          &key
                          (if-does-not-exist #'error))
-  (labels
-      ((recur ()
+  (let ((name name))
+    (tagbody
+     :start
+       (return-from find-service
          (or (gethash name *services*)
              (error-behavior-restart-case
                  (if-does-not-exist
@@ -106,16 +108,20 @@
                                            service designated by ~
                                            ~S.~@:>"
                                    name))
-                 (recur))
+                 (go :start))
                (use-value (value)
-                 :report (lambda (stream)
-                           (format stream "~@<Specify a value which ~
-                                           should be used as the ~
-                                           service designated by ~
-                                           ~S.~@:>"
-                                   name))
-                 value)))))
-    (recur)))
+                 :report      (lambda (stream)
+                                (format stream "~@<Specify a value ~
+                                                which should be used ~
+                                                as the service ~
+                                                designated by ~S.~@:>"
+                                        name))
+                 :interactive (lambda ()
+                                (format *query-io* "Enter value ~
+                                                    (evaluated): ")
+                                (finish-output *query-io*)
+                                (list (eval (read *query-io*))))
+                 value)))))))
 
 (defmethod (setf find-service) ((new-value t)
                                 (name      symbol)
@@ -234,8 +240,16 @@
                                   (provider t)
                                   &key
                                   (if-does-not-exist #'error))
-  (labels
-      ((recur ()
+  (let ((provider provider))
+    (tagbody
+       ;; This avoids multiple warnings when IF-DOES-NOT-EXIST is
+       ;; `warn'.
+       (when (symbolp service)
+         (return-from find-provider
+           (call-next-method service provider
+                             :if-does-not-exist if-does-not-exist)))
+     :start
+       (return-from find-provider
          (or (call-next-method service provider
                                :if-does-not-exist if-does-not-exist)
              (error-behavior-restart-case
@@ -250,20 +264,21 @@
                                            provider of service ~A ~
                                            designated by ~S.~@:>"
                                    service provider))
-                 (recur))
+                 (go :start))
                (use-value (value)
-                 :report (lambda (stream)
-                           (format stream "~@<Specify a value which ~
-                                           should be used as the ~
-                                           provider of service ~A ~
-                                           designated by ~S.~@:>"
-                                   service provider))
-                 value)))))
-    ;; This avoids multiple warnings when IF-DOES-NOT-EXIST is `warn'.
-    (if (symbolp service)
-        (call-next-method service provider
-                          :if-does-not-exist if-does-not-exist)
-        (recur))))
+                 :report      (lambda (stream)
+                                (format stream "~@<Specify a value ~
+                                                which should be used ~
+                                                as the provider of ~
+                                                service ~A designated ~
+                                                by ~S.~@:>"
+                                        service provider))
+                 :interactive (lambda ()
+                                (format *query-io* "Enter ~
+                                                    value (evaluated): ")
+                                (finish-output *query-io*)
+                                (list (eval (read *query-io*))))
+                 value)))))))
 
 (defmethod find-provider ((service  symbol)
                           (provider t)

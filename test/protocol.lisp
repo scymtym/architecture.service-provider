@@ -64,6 +64,8 @@
   ;; Request nil instead of error.
   (is (null (find-service 'no-such-service :if-does-not-exist nil))))
 
+(defvar *find-service-use-value-hack*)
+
 (test protocol.find-service.restarts
   "Check restarts established by the `find-service' generic function."
 
@@ -83,7 +85,7 @@
               (with-restart-fixture (no-such-service)
                 (let ((restart (find-restart 'retry condition)))
                   (is (typep restart 'restart))
-                  (does-not-signal error (princ-to-string restart))
+                  (is-false (emptyp (princ-to-string restart)))
                   (setf (find-service 'no-such-service) service)
                   (invoke-restart restart)))))
 
@@ -92,8 +94,15 @@
               (with-restart-fixture (no-such-service)
                 (let ((restart (find-restart 'use-value condition)))
                   (is (typep restart 'restart))
-                  (does-not-signal error (princ-to-string restart))
-                  (invoke-restart restart service))))))))
+                  (is-false (emptyp (princ-to-string restart)))
+
+                  (let* ((input      (make-string-input-stream
+                                      "*find-service-use-value-hack*"))
+                         (output     (make-string-output-stream))
+                         (*query-io* (make-two-way-stream input output)))
+                    (let ((*find-service-use-value-hack* service))
+                      (invoke-restart-interactively restart))
+                    (is (not (emptyp (get-output-stream-string output))))))))))))
 
 ;;; `find-provider' tests
 
@@ -154,6 +163,8 @@
     (is (null (find-provider :mock 'no-such-provider
                              :if-does-not-exist nil)))))
 
+(defvar *find-provider-use-value-hack*)
+
 (test protocol.find-provider.restarts
   "Check restarts established by the `find-provider' generic function."
 
@@ -174,18 +185,25 @@
                 (with-restart-fixture (no-such-provider)
                   (let ((restart (find-restart 'retry condition)))
                     (is (typep restart 'restart))
-                    (does-not-signal error (princ-to-string restart))
+                    (is (not (emptyp (princ-to-string restart))))
                     (setf (find-provider :mock 'no-such-provider) provider)
                     (invoke-restart restart))))))
 
-      ;; Use an arbitrary value instead of the missing service.
+      ;; Use an arbitrary value instead of the missing provider.
       (with-service (:mock)
         (is (eq provider
                 (with-restart-fixture (no-such-provider)
                   (let ((restart (find-restart 'use-value condition)))
                     (is (typep restart 'restart))
-                    (does-not-signal error (princ-to-string restart))
-                    (invoke-restart restart provider)))))))))
+                    (is (not (emptyp (princ-to-string restart))))
+
+                    (let* ((input      (make-string-input-stream
+                                        "*find-provider-use-value-hack*"))
+                           (output     (make-string-output-stream))
+                           (*query-io* (make-two-way-stream input output)))
+                      (let ((*find-provider-use-value-hack* provider))
+                        (invoke-restart-interactively restart))
+                      (is (not (emptyp (get-output-stream-string output)))))))))))))
 
 (test protocol.find-provider.undefinition
   "Test undefining providers via (setf (find-provider ...) nil)."
