@@ -89,6 +89,24 @@
                   (setf (find-service 'no-such-service) service)
                   (invoke-restart restart)))))
 
+      ;; Register a different service and retry with different
+      ;; designator.
+      (is (eq service
+              (with-restart-fixture (no-such-service)
+                (let ((restart (find-restart 'retry-with-name condition)))
+                  (is (typep restart 'restart))
+                  (is-false (emptyp (princ-to-string restart)))
+
+                  ;; Register a service and invoke the restart
+                  ;; interactively.
+                  (setf (find-service 'some-other-service) service)
+                  (let* ((input      (make-string-input-stream
+                                      "some-other-service"))
+                         (output     (make-string-output-stream))
+                         (*query-io* (make-two-way-stream input output)))
+                    (invoke-restart-interactively restart)
+                    (is (not (emptyp (get-output-stream-string output)))))))))
+
       ;; Use an arbitrary value instead of the missing service.
       (is (eq service
               (with-restart-fixture (no-such-service)
@@ -188,6 +206,25 @@
                     (is (not (emptyp (princ-to-string restart))))
                     (setf (find-provider :mock 'no-such-provider) provider)
                     (invoke-restart restart))))))
+
+      ;; Register a different provider and retry with different
+      ;; designator.
+      (with-service (:mock)
+        (is (eq provider
+                (with-restart-fixture (no-such-provider)
+                  (let ((restart (find-restart 'retry-with-name condition)))
+                    (is (typep restart 'restart))
+                    (is (not (emptyp (princ-to-string restart))))
+
+                    ;; Register a provider and invoke the restart
+                    ;; interactively.
+                    (setf (find-provider :mock 'some-other-provider) provider)
+                    (let* ((input      (make-string-input-stream
+                                        "some-other-provider"))
+                           (output     (make-string-output-stream))
+                           (*query-io* (make-two-way-stream input output)))
+                      (invoke-restart-interactively restart)
+                      (is (not (emptyp (get-output-stream-string output))))))))))
 
       ;; Use an arbitrary value instead of the missing provider.
       (with-service (:mock)

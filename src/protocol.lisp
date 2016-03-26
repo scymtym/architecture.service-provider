@@ -109,6 +109,19 @@
                                            ~S.~@:>"
                                    name))
                  (go :start))
+               (retry-with-name (new-name)
+                 :report      (lambda (stream)
+                                (format stream "~@<Specify a name ~
+                                                with which the lookup ~
+                                                should be ~
+                                                retried.~@:>"))
+                 :interactive (lambda ()
+                                (format *query-io* "Enter service ~
+                                                    designator (unevaluated): ")
+                                (finish-output *query-io*)
+                                (list (read *query-io*)))
+                 (setf name new-name)
+                 (go :start))
                (use-value (value)
                  :report      (lambda (stream)
                                 (format stream "~@<Specify a value ~
@@ -264,6 +277,18 @@
                                            provider of service ~A ~
                                            designated by ~S.~@:>"
                                    service provider))
+                 (go :start))
+               (retry-with-name (new-name)
+                 :report      (lambda (stream)
+                                (format stream "~@<Specify a name with ~
+                                                which the lookup should ~
+                                                be retried.~@:>"))
+                 :interactive (lambda ()
+                                (format *query-io* "Enter provider ~
+                                                    designator (unevaluated): ")
+                                (finish-output *query-io*)
+                                (list (read *query-io*)))
+                 (setf provider new-name)
                  (go :start))
                (use-value (value)
                  :report      (lambda (stream)

@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -33,7 +33,8 @@
 
   ;; Restarts
   (:export
-   #:retry)
+   #:retry
+   #:retry-with-name)
 
   ;; Service Protocol
   (:export
