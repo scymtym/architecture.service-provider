@@ -24,9 +24,15 @@
 (defmethod shared-initialize :after ((instance   class-provider)
                                      (slot-names t)
                                      &key
-                                     (class nil class-supplied?))
+                                     (class                  nil class-supplied?)
+                                     allow-forward-reference)
   (when class-supplied?
-    (setf (slot-value instance 'class) (find-class class))))
+    (setf (slot-value instance 'class)
+          (or (when (typep class 'class)
+                class)
+              (find-class class (not allow-forward-reference))
+              (c2mop:ensure-class
+               class :metaclass 'c2mop:forward-referenced-class)))))
 
 (defmethod make-provider ((service  t)
                           (provider class-provider)
