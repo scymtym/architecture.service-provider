@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for unit tests of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014, 2015 Jan Moringen
+;;;; Copyright (C) 2012, 2013, 2014, 2015, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -30,9 +30,7 @@
    system.")
 
 (defun run-tests ()
-  (let ((results (run 'service-provider)))
-    (explain! results)
-    (results-status results)))
+  (run! 'service-provider))
 
 ;;; Generic test tools
 

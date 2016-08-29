@@ -25,7 +25,7 @@
   :description "Unit tests of the architecture.service-provider-and-hooks system."
   :depends-on  (:alexandria
 
-                (:version :fiveam                                  "1.1")
+                (:version :fiveam                                  "1.3")
 
                 (:version :architecture.service-provider-and-hooks (:read-file-form "version-string.sexp"))
 

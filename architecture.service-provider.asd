@@ -37,7 +37,7 @@
                 (:version :let-plus                      "0.2")
                 :more-conditions
 
-                (:version :fiveam                        "1.1")
+                (:version :fiveam                        "1.3")
 
                 (:version :architecture.service-provider (:read-file-form "version-string.sexp")))
   :components  ((:module     "test"
