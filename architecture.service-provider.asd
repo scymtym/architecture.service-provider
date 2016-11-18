@@ -25,9 +25,9 @@
                               (:file       "provider")
                               (:file       "macros")
                               #+later (:file       "compilation"))))
-  :in-order-to ((test-op (test-op :architecture.service-provider-test))))
+  :in-order-to ((test-op (test-op :architecture.service-provider/test))))
 
-(defsystem :architecture.service-provider-test
+(defsystem :architecture.service-provider/test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     (:read-file-form "version-string.sexp")
@@ -51,5 +51,5 @@
                               #+later (:file       "compilation")))))
 
 (defmethod perform ((op        test-op)
-                    (component (eql (find-system :architecture.service-provider-test))))
+                    (component (eql (find-system :architecture.service-provider/test))))
   (funcall (read-from-string "service-provider.test:run-tests")))

@@ -15,9 +15,9 @@
                 (:version :architecture.service-provider (:read-file-form "version-string.sexp")))
   :components  ((:file       "hooks"
                  :pathname   "src/hooks"))
-  :in-order-to ((test-op (test-op :architecture.service-provider-and-hooks-test))))
+  :in-order-to ((test-op (test-op :architecture.service-provider-and-hooks/test))))
 
-(defsystem :architecture.service-provider-and-hooks-test
+(defsystem :architecture.service-provider-and-hooks/test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     (:read-file-form "version-string.sexp")
@@ -29,10 +29,10 @@
 
                 (:version :architecture.service-provider-and-hooks (:read-file-form "version-string.sexp"))
 
-                (:version :architecture.service-provider-test      (:read-file-form "version-string.sexp")))
+                (:version :architecture.service-provider/test      (:read-file-form "version-string.sexp")))
   :components  ((:file       "hooks"
                  :pathname   "test/hooks")))
 
 (defmethod perform ((operation test-op)
-                    (component (eql (find-system :architecture.service-provider-and-hooks-test))))
+                    (component (eql (find-system :architecture.service-provider-and-hooks/test))))
   (eval (read-from-string "(5am:run! 'service-provider.test::service-provider.hooks)")))
