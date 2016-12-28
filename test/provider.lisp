@@ -17,23 +17,42 @@
 (test class-provider.construction
   "Test constructing `class-provider' instances."
 
-  ;; Not-defined class with explicitly allowing forward-references
-  ;; signals an error.
-  (signals error (make-instance 'class-provider
-                                :name  :no-such-class
-                                :class 'no-such-class))
-  ;; No error when explicitly allowing forward references.
   (let ((provider (make-instance 'class-provider
-                                 :name                    :no-such-class
-                                 :class                   'no-such-class
-                                 :allow-forward-reference t)))
-    (is (typep (provider-class provider) 'class)))
-  ;; Providing a class instead of a class name should also work.
+                                 :name  'class-provider.mock-provider
+                                 :class 'class-provider.mock-provider)))
+    (is (eq (find-class 'class-provider.mock-provider)
+            (provider-class provider))))
+
+  ;; Supplying a class instead of a class name should also work.
   (let* ((class    (find-class 'class-provider.mock-provider))
          (provider (make-instance 'class-provider
                                   :name  (class-name class)
                                   :class class)))
     (is (eq class (provider-class provider)))))
+
+(test class-provider.construction.unsuitable-classes
+  "Test constructing `class-provider' instances with unsuitable
+   classes."
+
+  (unwind-protect
+       (progn
+         ;; Not-defined class without explicitly allowing
+         ;; forward-references signals an error.
+         (signals error (make-instance 'class-provider
+                                       :name  :no-such-class
+                                       :class 'no-such-class))
+         ;; No error when explicitly allowing forward references.
+         (let ((provider (make-instance 'class-provider
+                                        :name                    :no-such-class
+                                        :class                   'no-such-class
+                                        :allow-forward-reference t)))
+           (is (typep (provider-class provider) 'class)))
+         ;; forward-referenced class without explicitly allowing
+         ;; forward-references signals an error.
+         (signals error (make-instance 'class-provider
+                                       :name  :no-such-class
+                                       :class 'no-such-class)))
+    (setf (find-class 'no-such-class) nil)))
 
 (test class-provider.print
   "Test printing a `class-provider' instance."
