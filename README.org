@@ -192,9 +192,53 @@
      (doc 'service-provider:find-service 'function)
    #+END_SRC
 
+   #+RESULTS:
+   #+begin_example
+   find-service NAME &KEY IF-DOES-NOT-EXIST
+
+   Find and return the service designated by the `service-designator'
+   NAME.
+
+   IF-DOES-NOT-EXIST controls the behavior in case the designated
+   service cannot be found:
+
+   The values #'error and 'error cause a `missing-service-error' to
+   be signaled.
+
+   The values #'warn and 'warn cause a `missing-service-warning' to
+   be signaled and nil to be returned.
+
+   The value nil causes nil to be returned without any conditions
+   being signaled.
+
+   `retry' and `use-value' restarts are established around error
+   signaling (if IF-DOES-NOT-EXIST mandates that).
+#+end_example
+
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc '(setf service-provider:find-service) 'function)
    #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   (setf find-service) NEW-VALUE NAME &KEY IF-DOES-NOT-EXIST
+
+   Set the service designated by the `service-designator' NAME to
+   NEW-VALUE. When non-nil, NEW-VALUE has to implement the service
+   protocol.
+
+   If NAME already designates a service, the existing service object
+   is replaced with NEW-VALUE.
+
+   If NEW-VALUE is nil, an existing service designated by NAME is
+   removed.
+
+   IF-DOES-NOT-EXIST is accepted for parity with `find-service' and
+   usually ignored. However, when NEW-VALUE is nil, IF-DOES-NOT-EXIST
+   controls whether an error should be signaled in case the
+   to-be-removed service does not exist.
+#+end_example
+
 ** Provider Protocol
    The following generic functions operate on provider objects:
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
@@ -214,8 +258,7 @@
 
    #+RESULTS:
    #+begin_example
-   find-provider SERVICE PROVIDER &KEY IF-DOES-NOT-EXIST IF-DOES-NOT-EXIST
-                 (IF-DOES-NOT-EXIST #'ERROR)
+   find-provider SERVICE PROVIDER &KEY IF-DOES-NOT-EXIST
 
    Find and return the provider designated by the
    `provider-designator' PROVIDER in the service designated by the
@@ -248,7 +291,6 @@
    #+RESULTS:
    #+begin_example
    (setf find-provider) NEW-VALUE SERVICE PROVIDER &KEY IF-DOES-NOT-EXIST
-                        (IF-DOES-NOT-EXIST #'WARN)
 
    Set the provider designated by the `provider-designator' PROVIDER
    in the service designated by the `service-designator' SERVICE to
@@ -300,9 +342,7 @@
    #+END_SRC
 
    #+RESULTS:
-   : make-provider SERVICE PROVIDER &REST ARGS &KEY
-   :               (DIRECTION (MISSING-REQUIRED-ARGUMENT DIRECTION))
-   :               (SCHEMA (MISSING-REQUIRED-ARGUMENT SCHEMA))
+   : make-provider SERVICE PROVIDER &REST ARGS
    :
    : Make and return an instance of the provider designated by the
    : `provider-designator' PROVIDER of the service designated by the
