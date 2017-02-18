@@ -61,27 +61,27 @@
   "Smoke test for hooks provided by the `change-hook-mixin' service
    mixin class in combination with a class provider."
 
-      (with-service (:mock (:service-class hooks.smoke.service))
-        (with-hook-call-recording (:mock calls)
+  (with-service (:mock (:service-class hooks.smoke.service))
+    (with-hook-call-recording (:mock calls)
 
-          (register-provider/class :mock 'hooks.smoke.provider-class)
-          (check-call (calls 1)
-            (:provider-added hooks.smoke.provider-class class-provider))
+      (register-provider/class :mock 'hooks.smoke.provider-class)
+      (check-call (calls 1)
+        (:provider-added hooks.smoke.provider-class class-provider))
 
-          (register-provider/class :mock 'hooks.smoke.provider-class)
-          (check-call (calls 2)
-            (:provider-updated hooks.smoke.provider-class class-provider))
+      (register-provider/class :mock 'hooks.smoke.provider-class)
+      (check-call (calls 2)
+        (:provider-updated hooks.smoke.provider-class class-provider))
 
-          (register-provider/class :mock 'hooks.smoke.provider-class)
-          (check-call (calls 3)
-            (:provider-updated hooks.smoke.provider-class class-provider))
+      (register-provider/class :mock 'hooks.smoke.provider-class)
+      (check-call (calls 3)
+        (:provider-updated hooks.smoke.provider-class class-provider))
 
-          (setf (find-provider :mock 'hooks.smoke.provider-class) nil)
-          (check-call (calls 4)
-            (:provider-removed hooks.smoke.provider-class class-provider))
+      (setf (find-provider :mock 'hooks.smoke.provider-class) nil)
+      (check-call (calls 4)
+        (:provider-removed hooks.smoke.provider-class class-provider))
 
-          ;; Attempting to remove a non-existent provider should not
-          ;; run hooks.
-          (setf (find-provider :mock 'bar :if-does-not-exist nil) nil)
-          (check-call (calls 4)
-            (:provider-removed hooks.smoke.provider-class class-provider)))))
+      ;; Attempting to remove a non-existent provider should not
+      ;; run hooks.
+      (setf (find-provider :mock 'bar :if-does-not-exist nil) nil)
+      (check-call (calls 4)
+        (:provider-removed hooks.smoke.provider-class class-provider)))))
