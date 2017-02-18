@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Protocol provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -309,6 +309,7 @@
                           (provider t)
                           &key
                           if-does-not-exist)
+  (declare (notinline find-provider))
   (when-let ((service (find-service
                        service :if-does-not-exist if-does-not-exist)))
     (find-provider service provider :if-does-not-exist if-does-not-exist)))
@@ -318,6 +319,7 @@
                                  (provider  t)
                                  &key
                                  (if-does-not-exist #'warn))
+  (declare (notinline (setf find-provider)))
   (setf (find-provider (find-service service) provider
                        :if-does-not-exist if-does-not-exist)
         new-value))
@@ -325,11 +327,13 @@
 (defmethod make-provider ((service  symbol)
                           (provider t)
                           &rest args)
+  (declare (notinline make-provider))
   (apply #'make-provider (find-service service) provider args))
 
 (defmethod make-provider ((service  t)
                           (provider t)
                           &rest args)
+  (declare (notinline make-provider find-provider))
   (apply #'make-provider service (find-provider service provider) args))
 
 ;;; TODO(jmoringe, 2012-12-23): avoid redundancy
@@ -344,5 +348,6 @@
                                (provider    t)
                                (args        t)
                                (environment t))
+  (declare (notinline find-provider))
   (make-provider-form service (find-provider service provider)
                       args environment))

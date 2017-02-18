@@ -1,6 +1,6 @@
 ;;;; hooks.lisp --- Unit tests for the hooks extension.
 ;;;;
-;;;; Copyright (C) 2014 Jan Moringen
+;;;; Copyright (C) 2014, 2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -35,6 +35,11 @@
   "Smoke test for hooks provided by the `change-hook-mixin' service
    mixin class in combination with a function provider."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function
+                      find-provider (setf find-provider)))
+
   (with-service (:mock (:service-class hooks.smoke.service))
     (with-hook-call-recording (:mock calls)
 
@@ -60,6 +65,11 @@
 (test hooks.smoke/class
   "Smoke test for hooks provided by the `change-hook-mixin' service
    mixin class in combination with a class provider."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/class
+                      find-provider (setf find-provider)))
 
   (with-service (:mock (:service-class hooks.smoke.service))
     (with-hook-call-recording (:mock calls)

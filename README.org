@@ -110,6 +110,29 @@
    :
    : "Providers of this service do stuff."
 
+** Compilation
+   The system has some support for detecting uses of non-existent
+   services and providers at compile-time. In particular, the
+   =service-provider:make-provider= function can signal
+   =cl:style-warning= s when service and/or provider arguments are
+   constant and do not designate existing services or providers:
+   #+BEGIN_SRC lisp :results output :exports both
+     (handler-bind ((warning (lambda (condition)
+                               (format t "~S:~%~2@T~A~%"
+                                       (type-of condition) condition))))
+       (compile nil '(lambda ()
+                       (service-provider:make-provider :no-such-service :provider)))
+       (compile nil '(lambda ()
+                       (service-provider:make-provider 'my-service :no-such-provider))))
+   #+END_SRC
+
+   #+RESULTS:
+   : SERVICE-PROVIDER:MISSING-SERVICE-WARNING:
+   :   No service is known for the designator :NO-SUCH-SERVICE.
+   : SERVICE-PROVIDER:MISSING-PROVIDER-WARNING:
+   :   No provider of service #<STANDARD-SERVICE MY-SERVICE (0) {1005A0A2B3}> is
+   :   known for the designator :NO-SUCH-PROVIDER.
+
 ** TODO Efficiency Considerations
 * Dictionary
   #+begin_src lisp :results none :exports none :session "doc"

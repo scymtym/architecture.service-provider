@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Unit tests for the protocol functions of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2013, 2014, 2016 Jan Moringen
+;;;; Copyright (C) 2013, 2014, 2016, 2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -36,6 +36,10 @@
 
 (test protocol.service-providers.smoke
   "Smoke test for the service-providers{,/alist,/plist} functions."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function find-provider))
 
   (with-service (:mock1)
     (register-provider/function :mock1 :mock2 :function 'list)
@@ -128,6 +132,10 @@
   "Test signaling of `type-error' when `find-provider' is called with
    something other than a `provider-designator'."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline find-provider))
+
   (with-service (:mock)
     (signals type-error (find-provider :mock nil))
     (signals type-error (find-provider :mock (cons 1 nil)))))
@@ -135,6 +143,10 @@
 (test protocol.find-provider.smoke.symbol-designator
   "Check `find-provider' works with symbols as
    `provider-designator's."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function find-provider))
 
   (let ((designator :list))
     (with-service (:mock)
@@ -146,6 +158,10 @@
 (test protocol.find-provider.smoke.non-symbol-designator
   "Check `find-provider' works with lists as `provider-designator's."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function find-provider))
+
   (let ((designator '(:list real)))
     (with-service (:mock)
       (register-provider/function :mock designator :function 'list)
@@ -155,6 +171,10 @@
 
 (test protocol.find-provider.conditions
   "Check conditions signaled by the `find-provider' generic function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline find-provider))
 
   ;; When the service cannot be found, the provider name does not
   ;; matter. Otherwise a `missing-provider-error' should be signaled.
@@ -185,6 +205,10 @@
 
 (test protocol.find-provider.restarts
   "Check restarts established by the `find-provider' generic function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline (setf find-provider) find-provider))
 
   (macrolet
       ((with-restart-fixture ((provider) &body body)
@@ -244,6 +268,11 @@
 
 (test protocol.find-provider.undefinition
   "Test undefining providers via (setf (find-provider ...) nil)."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function
+                      (setf find-provider) find-provider))
 
   (macrolet
       ((test-case (&body body)

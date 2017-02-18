@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for unit tests of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014, 2015, 2016 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -12,6 +12,9 @@
    #:fiveam
 
    #:service-provider)
+
+  (:import-from #:service-provider
+   #:register-provider)
 
   (:export
    #:run-tests)

@@ -1,6 +1,6 @@
 ;;;; provider.lisp --- Unit tests for provider classes.
 ;;;;
-;;;; Copyright (C) 2016 Jan Moringen
+;;;; Copyright (C) 2016, 2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -57,6 +57,10 @@
 (test class-provider.print
   "Test printing a `class-provider' instance."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/class))
+
   (let+ (((&flet test-case (class-name name expect-class-name?)
             (with-service (foo)
               (%check-print-object-output
@@ -68,6 +72,10 @@
 
 (test class-provider.documentation
   "Test calling `documentation' on a `class-provider' instance."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/class))
 
   (with-service (foo)
     (let ((provider (register-provider/class
@@ -83,6 +91,10 @@
 (test function-provider.print
   "Test printing a `function-provider' instance."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function))
+
   (let+ (((&flet test-case (function-name name expect-class-name?)
             (with-service (foo)
               (%check-print-object-output
@@ -94,6 +106,10 @@
 
 (test function-provider.documentation
   "Test calling `documentation' on a `function-provider' instance."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function))
 
   (with-service (foo)
     (let ((provider (register-provider/function

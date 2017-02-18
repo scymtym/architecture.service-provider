@@ -1,6 +1,6 @@
 ;;;; macros.lisp --- Unit tests for macros of the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -77,6 +77,10 @@
 (test macros.register-provider/class.smoke
   "Smoke test for the `register-provider/class' function."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/class find-provider))
+
   ;; Test registering and finding a simple provider.
   (with-service (foo)
     (register-provider/class 'foo :mock :class 'mock-provider)
@@ -100,6 +104,10 @@
 (test macros.register-provider/class.conditions
   "Test conditions signaled by the `register-provider/class' function."
 
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/class))
+
   (signals missing-service-error
     (register-provider/class :no-such-service :does-not-matter
       :class 'mock-provider)))
@@ -113,6 +121,10 @@
 
 (test macros.register-provider/function.smoke
   "Smoke test for the `register-provider/function' function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function find-provider))
 
   ;; Test registering and finding a simple provider.
   (with-service (foo)
@@ -137,6 +149,10 @@
 (test macros.register-provider/function.conditions
   "Test conditions signaled by the `register-provider/function'
    function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider/function))
 
   (signals missing-service-error
     (register-provider/function :no-such-service :does-not-matter

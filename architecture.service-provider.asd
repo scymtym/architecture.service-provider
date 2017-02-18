@@ -24,7 +24,7 @@
                               (:file       "service")
                               (:file       "provider")
                               (:file       "macros")
-                              #+later (:file       "compilation"))))
+                              (:file       "compilation"))))
   :in-order-to ((test-op (test-op :architecture.service-provider/test))))
 
 (defsystem :architecture.service-provider/test
@@ -48,7 +48,7 @@
                               (:file       "service")
                               (:file       "provider")
                               (:file       "macros")
-                              #+later (:file       "compilation")))))
+                              (:file       "compilation")))))
 
 (defmethod perform ((op        test-op)
                     (component (eql (find-system :architecture.service-provider/test))))

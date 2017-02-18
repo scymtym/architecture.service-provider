@@ -61,6 +61,7 @@
 ;;; Provider registration
 
 (defun register-provider (service-name provider-name provider-class initargs)
+  (declare (notinline find-provider (setf find-provider)))
   (check-type service-name  service-designator)
   (check-type provider-name provider-designator)
 
@@ -103,6 +104,7 @@
                    ,@args
                    &allow-other-keys)
        ,@(when documentation `(,documentation))
+       (declare (notinline register-provider))
        (check-type service-name  service-designator)
        (check-type provider-name provider-designator)
 

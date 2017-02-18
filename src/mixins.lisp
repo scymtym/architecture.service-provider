@@ -1,6 +1,6 @@
 ;;;; mixins.lisp --- Mixin classes used/provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -115,14 +115,16 @@
 ;;; Utility functions
 
 (defun %add-or-update-provider (service name provider)
-  (declare (type provider-list-mixin service))
+  (declare (type provider-list-mixin service)
+           (notinline find-provider update-provider add-provider))
 
   (if (find-provider service name :if-does-not-exist nil)
       (update-provider service name provider)
       (add-provider service name provider)))
 
 (defun %remove-provider (service name if-does-not-exist)
-  (declare (type provider-list-mixin service))
+  (declare (type provider-list-mixin service)
+           (notinline remove-provider))
 
   (let* ((providers (service-%providers service))
          (provider  (gethash name providers)))
