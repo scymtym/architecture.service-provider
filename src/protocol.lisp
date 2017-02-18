@@ -47,12 +47,7 @@
       being signaled.
 
     `retry' and `use-value' restarts are established around error
-    signaling (if IF-DOES-NOT-EXIST mandates that).
-
-    TODO There is a compiler-macro for this function which tries to
-    find the designated service at compile-time and load-time if the
-    designator is constant. Compile- and load-time `style-warning' are
-    signaled if a constant designator cannot be found."))
+    signaling (if IF-DOES-NOT-EXIST mandates that)."))
 
 (defgeneric (setf find-service) (new-value name
                                  &key
@@ -193,13 +188,7 @@
       being signaled.
 
     `retry' and `use-value' restarts are established around error
-    signaling (if IF-DOES-NOT-EXIST mandates that).
-
-    TODO There is a compiler-macro for this function which tries to
-    find the designated service and provider at compile-time and
-    load-time if the designators are constant. Compile- and load-time
-    `style-warning's are signaled if a constant designator cannot be
-    found."))
+    signaling (if IF-DOES-NOT-EXIST mandates that)."))
 
 (defgeneric (setf find-provider) (new-value service provider
                                   &key

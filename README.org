@@ -239,12 +239,6 @@
 
    `retry' and `use-value' restarts are established around error
    signaling (if IF-DOES-NOT-EXIST mandates that).
-
-   TODO There is a compiler-macro for this function which tries to
-   find the designated service and provider at compile-time and
-   load-time if the designators are constant. Compile- and load-time
-   `style-warning's are signaled if a constant designator cannot be
-   found.
 #+end_example
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
@@ -301,7 +295,6 @@
    :
    : Remove PROVIDER from SERVICE as the provider designated by NAME.
 
-   TODO
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:make-provider 'function)
    #+END_SRC
@@ -315,7 +308,7 @@
    : `provider-designator' PROVIDER of the service designated by the
    : `service-designator' SERVICE.
 
-* TODO Related Work
+* Related Work
 ** Java Service Provider Interface
    See [[http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html][documentation of the ServiceLoader class]] for details.
 
