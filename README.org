@@ -29,7 +29,7 @@
     code.
   * Service providers can be loaded lazily when they are instantiated.
 
-  This systems adds first class services and service providers to
+  This system adds first class services and service providers to
   facilitate use cases like the above while trying to avoid conceptual
   mismatches with the builtin mechanisms.
 
