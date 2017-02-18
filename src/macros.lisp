@@ -1,6 +1,6 @@
 ;;;; macros.lisp --- Macros provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -72,21 +72,6 @@
                  :name provider-name
                  initargs))))
 
-(defmacro define-provider ((service-name provider-name) spec &body options)
-  "TODO(jmoringe): document"
-  (check-type service-name  service-designator)
-  (check-type provider-name provider-designator)
-
-  (let+ (((name &rest initargs) spec)
-         ((&plist-r/o
-           (provider-class :provider-class
-                           (symbolicate name '#:-provider)))
-          (apply #'append options)))
-    #+no (check-type provider-class symbol)
-
-    `(register-provider ',service-name ',provider-name
-                        ',provider-class (list ,@initargs))))
-
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defmacro define-register-function
       (name args
@@ -155,40 +140,3 @@
 
    The `cl:documentation' of FUNCTION is used as the documentation of
    the provider.")
-
-(defmacro define-provider-class ((service-name provider-name)
-                                 direct-superclasses
-                                 direct-slots
-                                 &body options)
-  "TODO(jmoringe): document"
-  `(progn
-     (defclass ,provider-name ,direct-superclasses
-       ,direct-slots
-       ,@options)
-
-     #+no (define-provider (,service-name ,provider-name)
-           (class ',provider-name))
-
-     (register-provider/class ',service-name ',provider-name)))
-
-(defmacro define-provider-function
-    ((service-name provider-name
-      &key
-      (function-name (%provider-name->function-name
-                      service-name provider-name)))
-      args
-     &body body)
-  "TODO(jmoringe): document"
-  `(progn
-     (defun ,function-name ,args ,@body)
-
-     (register-provider/function
-      ',service-name ',provider-name :function ',function-name)))
-
-(defun %provider-name->function-name (service-name provider-name)
-  (declare (type service-designator  service-name)
-           (type provider-designator provider-name))
-  (apply #'symbolicate '#:make
-         (loop :for component :in (append (ensure-list provider-name)
-                                          (ensure-list service-name))
-            :collect '#:- :collect component)))

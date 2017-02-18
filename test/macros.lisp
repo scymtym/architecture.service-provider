@@ -141,12 +141,3 @@
   (signals missing-service-error
     (register-provider/function :no-such-service :does-not-matter
       :function 'mock-provider)))
-
-#+no (define-provider (foo bar)
-         (class :class 'bar))
-
-#+no (define-provider (foo bar)
-         (function :function 'bar))
-
-#+no (define-provider-class (foo bar) ()
-         ((slot :initarg :slot)))
