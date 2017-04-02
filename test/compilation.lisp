@@ -17,10 +17,10 @@
     ((define (name call)
        (let ((test-name (symbolicate '#:compilation. name '#:.conditions)))
          `(test ,test-name
-
             ,(format nil "Test compile-time warnings for `~(~A~)' ~
                           calls."
                      name)
+
             (compilation-signals missing-service-warning ()
               ,(sublis '((&service . 'no-such-service)) call))
             (compilation-does-not-signal missing-service-warning (service)

@@ -75,7 +75,7 @@
   (define register-provider/function (service-name provider-name
                                       &key &allow-other-keys)))
 
-;;; Compile-time checks fro service and provider existence
+;;; Compile-time checks for service and provider existence
 
 (define-compiler-macro make-provider (&whole form service provider &rest args)
   (declare (ignore args))
