@@ -325,8 +325,6 @@
   (declare (notinline make-provider find-provider))
   (apply #'make-provider service (find-provider service provider) args))
 
-;;; TODO(jmoringe, 2012-12-23): avoid redundancy
-
 (defmethod make-provider-form ((service     symbol)
                                (provider    t)
                                (args        t)
