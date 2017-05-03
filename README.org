@@ -348,6 +348,81 @@
    : `provider-designator' PROVIDER of the service designated by the
    : `service-designator' SERVICE.
 
+** Convenience Layer
+   The following convenience functions and macros are provided for
+   registering services:
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:define-service 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   define-service NAME &BODY OPTIONS
+
+   Define a service named NAME with additional aspects specified in
+   OPTIONS.
+
+   The following OPTIONS are accepted:
+
+   (:service-class CLASS-NAME)
+
+   Name of the class of the to-be-defined service. Defaults to
+   `standard-service'.
+
+   (:documentation STRING)
+
+   If NAME already designates a service, the existing service object
+   is destructively modified according to OPTIONS.
+
+   The service definition is performed at compile, load and execute
+   time to ensure availability in subsequent provider definitions
+   and/or compilation of e.g. `find-service' calls.
+#+end_example
+
+   The following convenience functions are provided for registering
+   providers:
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:register-provider/class 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   register-provider/class SERVICE-NAME PROVIDER-NAME &REST ARGS &KEY
+                           (PROVIDER-CLASS 'CLASS-PROVIDER) (CLASS PROVIDER-NAME)
+                           &ALLOW-OTHER-KEYS
+
+   Register CLASS as the provider named PROVIDER-NAME of the service
+   designated by SERVICE-NAME.
+
+   PROVIDER-CLASS can be used to select the class of which the created
+   provider should be an instance.
+
+   The `cl:documentation' of CLASS is used as the documentation of the
+   provider.
+#+end_example
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:register-provider/function 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   register-provider/function SERVICE-NAME PROVIDER-NAME &REST ARGS &KEY
+                              (PROVIDER-CLASS 'FUNCTION-PROVIDER) #'PROVIDER-NAME
+                              &ALLOW-OTHER-KEYS
+
+   Register FUNCTION as the provider named PROVIDER-NAME of the
+   service designated by SERVICE-NAME.
+
+   PROVIDER-CLASS can be used to select the class of which the created
+   provider should be an instance.
+
+   The `cl:documentation' of FUNCTION is used as the documentation of
+   the provider.
+#+end_example
+
 * Related Work
 ** Java Service Provider Interface
    See [[http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html][documentation of the ServiceLoader class]] for details.
