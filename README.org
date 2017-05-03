@@ -353,6 +353,25 @@
    registering services:
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:register-service 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   register-service NAME SERVICE-CLASS &REST INITARGS
+
+   Register a service named NAME according to SERVICE-CLASS and INITARGS.
+
+   If NAME does not name an existing service, an instance of
+   SERVICE-CLASS is made with INITARGS and registered.
+
+   If NAME names an existing service, the service is updated via
+   re-initialization, potentially changing its class to SERVICE-CLASS.
+
+   The new or updated service instance is returned.
+#+end_example
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:define-service 'function)
    #+END_SRC
 

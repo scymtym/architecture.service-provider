@@ -13,6 +13,24 @@
 (defclass specialized-service (standard-service)
   ())
 
+(test macros.register-service.smoke
+  "Smoke test for the `define-service' function."
+
+  (with-cleaned-up-service (foo)
+    (register-service 'foo 'standard-service)
+    (is (equal 'foo (service-name (find-service 'foo)))))
+
+  ;; Test :documentation option.
+  (with-cleaned-up-service (foo)
+    (register-service 'foo 'standard-service :documentation "foo")
+    (is (equal "foo" (documentation (find-service 'foo) t))))
+
+  ;; Test :service-class option.
+  (with-cleaned-up-service (foo)
+    (register-service 'foo 'specialized-service)
+    (is (eq (find-class 'specialized-service)
+            (class-of (find-service 'foo))))))
+
 (test macros.define-service.smoke
   "Smoke test for the `define-service' macro."
 

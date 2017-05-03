@@ -9,6 +9,15 @@
 ;;; Service registration
 
 (defun register-service (name service-class &rest initargs)
+  "Register a service named NAME according to SERVICE-CLASS and INITARGS.
+
+   If NAME does not name an existing service, an instance of
+   SERVICE-CLASS is made with INITARGS and registered.
+
+   If NAME names an existing service, the service is updated via
+   re-initialization, potentially changing its class to SERVICE-CLASS.
+
+   The new or updated service instance is returned."
   (check-type name service-designator)
 
   (setf (find-service name)
