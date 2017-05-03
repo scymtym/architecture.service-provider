@@ -8,18 +8,13 @@
 
 ;;; Service registration
 
-(defun register-service (name service-class initargs &optional documentation)
+(defun register-service (name service-class &rest initargs)
   (check-type name service-designator)
 
   (setf (find-service name)
         (if-let ((service (find-service name :if-does-not-exist nil)))
-          (apply #'change-class service service-class
-                 :documentation documentation
-                 initargs)
-          (apply #'make-instance service-class
-                 :name          name
-                 :documentation documentation
-                 initargs))))
+          (apply #'change-class service service-class initargs)
+          (apply #'make-instance service-class :name name initargs))))
 
 (defmacro define-service (name &body options)
   "Define a service named NAME with additional aspects specified in
@@ -56,7 +51,7 @@
 
     `(eval-when (:compile-toplevel :load-toplevel :execute)
        (register-service
-        ',name ',service-class (list ,@initargs) ,documentation))))
+        ',name ',service-class ,@initargs :documentation ,documentation))))
 
 ;;; Provider registration
 
