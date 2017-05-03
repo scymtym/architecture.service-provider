@@ -84,13 +84,50 @@
     (is (eq (find-class 'standard-service)
             (class-of (find-service 'foo))))))
 
-;;; `register-provider/class'
+;;; `register-provider' and `register-provider/class'
 
 (defclass mock-provider ()
   ())
 
 (defclass specialized-class-provider (class-provider)
   ())
+
+(test macros.register-provider.smoke
+  "Smoke test for the `register-provider' function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider find-provider))
+
+  ;; Test registering and finding a simple provider.
+  (with-service (foo)
+    (register-provider 'foo :mock 'class-provider :class 'mock-provider)
+    (is (equal :mock (provider-name (find-provider 'foo :mock)))))
+
+  ;; Use the service object instead of its name.
+  (with-service (foo)
+    (let ((service (find-service 'foo)))
+      (register-provider service :mock 'class-provider :class 'mock-provider)
+      (is (equal :mock (provider-name (find-provider service :mock))))))
+
+  ;; Test registering and finding a provider of a specialized class.
+  (with-service (foo)
+    (register-provider 'foo :mock 'specialized-class-provider
+                       :class 'mock-provider)
+    (is (equal :mock (provider-name (find-provider 'foo :mock))))
+    (is (eq (find-class 'specialized-class-provider)
+            (class-of (find-provider 'foo :mock) )))))
+
+(test macros.register-provider.conditions
+  "Test conditions signaled by the `register-provider' function."
+
+  ;; This avoids compile-time style-warnings for using non-existent
+  ;; services.
+  (declare (notinline register-provider))
+
+  (signals missing-service-error
+    (register-provider :no-such-service :does-not-matter 'class-provider
+                       :class 'mock-provider)))
 
 (test macros.register-provider/class.smoke
   "Smoke test for the `register-provider/class' function."

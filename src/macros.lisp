@@ -64,7 +64,21 @@
 
 ;;; Provider registration
 
-(defun register-provider (service-name provider-name provider-class initargs)
+(defun register-provider (service-name provider-name provider-class
+                          &rest initargs)
+  "Register a provider of SERVICE-NAME according to PROVIDER-NAME,
+   PROVIDER-CLASS and INITARGS.
+
+   If PROVIDER-NAME does not name an existing provider of the service
+   designated by SERVICE-NAME, an instance of PROVIDER-CLASS is made
+   with INITARGS and registered.
+
+   If PROVIDER-NAME names an existing provider of the service
+   designated by SERVICE-NAME, the provider is updated via
+   re-initialization, potentially changing its class to
+   PROVIDER-CLASS.
+
+   The new or updated provider instance is returned."
   (declare (notinline find-provider (setf find-provider)))
   (check-type service-name  service-designator)
   (check-type provider-name provider-designator)
@@ -118,8 +132,8 @@
                          args :provider-class
                          ,@(mapcar #'car (plist-alist required-initargs))))))
 
-         (register-provider
-          service-name provider-name provider-class initargs)))))
+         (apply #'register-provider service-name provider-name provider-class
+                initargs)))))
 
 (define-register-function register-provider/class ((class provider-name))
   :required-initargs      (:class class)

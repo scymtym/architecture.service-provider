@@ -47,11 +47,12 @@
                     &key
                     (service-parameter (first lambda-list))
                     provider-parameter)
-             (let+ (((&values required optional &ign key)
+             (let+ (((&values required optional rest key)
                      (parse-ordinary-lambda-list lambda-list))
                     (other-parameters (set-difference
                                        (append required
                                                (mapcar #'first optional)
+                                               (ensure-list rest)
                                                (mapcar #'cadar key))
                                        (list service-parameter
                                              provider-parameter))))
@@ -69,7 +70,7 @@
   (define add-provider (service name provider))
   (define remove-provider (service name provider))
   (define register-provider (service-name provider-name
-                             provider-class initargs))
+                             provider-class &rest initargs))
   (define register-provider/class (service-name provider-name
                                    &key &allow-other-keys))
   (define register-provider/function (service-name provider-name

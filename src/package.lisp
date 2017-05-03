@@ -78,6 +78,8 @@
 
    #:define-service
 
+   #:register-provider
+
    #:register-provider/class
    #:register-provider/function)
 

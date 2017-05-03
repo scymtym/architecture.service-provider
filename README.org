@@ -403,6 +403,29 @@
    providers:
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
+     (doc 'service-provider:register-provider 'function)
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   register-provider SERVICE-NAME PROVIDER-NAME PROVIDER-CLASS &REST INITARGS
+
+   Register a provider of SERVICE-NAME according to PROVIDER-NAME,
+   PROVIDER-CLASS and INITARGS.
+
+   If PROVIDER-NAME does not name an existing provider of the service
+   designated by SERVICE-NAME, an instance of PROVIDER-CLASS is made
+   with INITARGS and registered.
+
+   If PROVIDER-NAME names an existing provider of the service
+   designated by SERVICE-NAME, the provider is updated via
+   re-initialization, potentially changing its class to
+   PROVIDER-CLASS.
+
+   The new or updated provider instance is returned.
+#+end_example
+
+   #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:register-provider/class 'function)
    #+END_SRC
 
