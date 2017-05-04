@@ -68,8 +68,6 @@
   ;; Request nil instead of error.
   (is (null (find-service 'no-such-service :if-does-not-exist nil))))
 
-(defvar *find-service-use-value-hack*)
-
 (test protocol.find-service.restarts
   "Check restarts established by the `find-service' generic function."
 
@@ -104,12 +102,9 @@
                   ;; Register a service and invoke the restart
                   ;; interactively.
                   (setf (find-service 'some-other-service) service)
-                  (let* ((input      (make-string-input-stream
-                                      "some-other-service"))
-                         (output     (make-string-output-stream))
-                         (*query-io* (make-two-way-stream input output)))
+                  (with-query-io-setup ("some-other-service" output)
                     (invoke-restart-interactively restart)
-                    (is (not (emptyp (get-output-stream-string output)))))))))
+                    (is (not (emptyp output))))))))
 
       ;; Use an arbitrary value instead of the missing service.
       (is (eq service
@@ -118,13 +113,10 @@
                   (is (typep restart 'restart))
                   (is-false (emptyp (princ-to-string restart)))
 
-                  (let* ((input      (make-string-input-stream
-                                      "*find-service-use-value-hack*"))
-                         (output     (make-string-output-stream))
-                         (*query-io* (make-two-way-stream input output)))
-                    (let ((*find-service-use-value-hack* service))
+                  (with-query-io-setup ("*use-value-value*" output)
+                    (let ((*use-value-value* service))
                       (invoke-restart-interactively restart))
-                    (is (not (emptyp (get-output-stream-string output))))))))))))
+                    (is (not (emptyp output)))))))))))
 
 ;;; `find-provider' tests
 
@@ -201,8 +193,6 @@
     (is (null (find-provider :mock 'no-such-provider
                              :if-does-not-exist nil)))))
 
-(defvar *find-provider-use-value-hack*)
-
 (test protocol.find-provider.restarts
   "Check restarts established by the `find-provider' generic function."
 
@@ -243,12 +233,9 @@
                     ;; Register a provider and invoke the restart
                     ;; interactively.
                     (setf (find-provider :mock 'some-other-provider) provider)
-                    (let* ((input      (make-string-input-stream
-                                        "some-other-provider"))
-                           (output     (make-string-output-stream))
-                           (*query-io* (make-two-way-stream input output)))
+                    (with-query-io-setup ("some-other-provider" output)
                       (invoke-restart-interactively restart)
-                      (is (not (emptyp (get-output-stream-string output))))))))))
+                      (is (not (emptyp output)))))))))
 
       ;; Use an arbitrary value instead of the missing provider.
       (with-service (:mock)
@@ -258,13 +245,10 @@
                     (is (typep restart 'restart))
                     (is (not (emptyp (princ-to-string restart))))
 
-                    (let* ((input      (make-string-input-stream
-                                        "*find-provider-use-value-hack*"))
-                           (output     (make-string-output-stream))
-                           (*query-io* (make-two-way-stream input output)))
-                      (let ((*find-provider-use-value-hack* provider))
+                    (with-query-io-setup ("*use-value-value*" output)
+                      (let ((*use-value-value* provider))
                         (invoke-restart-interactively restart))
-                      (is (not (emptyp (get-output-stream-string output)))))))))))))
+                      (is (not (emptyp output))))))))))))
 
 (test protocol.find-provider.undefinition
   "Test undefining providers via (setf (find-provider ...) nil)."

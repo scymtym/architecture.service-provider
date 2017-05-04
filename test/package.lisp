@@ -82,3 +82,24 @@
   `(with-cleaned-up-service (,name)
      (define-service ,name ,@options)
      ,@body))
+
+(defvar *use-value-value*)
+
+(defun call-with-query-io-setup (thunk input)
+  (let+ ((input-stream  (make-string-input-stream input))
+         (output-stream (make-string-output-stream))
+         (output        nil)
+         ((&flet output ()
+            (or output
+                (setf output (get-output-stream-string output-stream)))))
+         (*query-io*    (make-two-way-stream input-stream output-stream)))
+    (funcall thunk #'output)))
+
+(defmacro with-query-io-setup ((input &optional output-var) &body body)
+  `(call-with-query-io-setup
+    (lambda (output-thunk)
+      (symbol-macrolet
+          (,@(when output-var
+               `((,output-var (funcall output-thunk)))))
+        ,@body))
+    ,input))
