@@ -78,11 +78,6 @@
   (define-lookup-method service-providers/alist)
   (define-lookup-method service-providers/plist))
 
-;;; TODO(jmoringe, 2012-12-16): move to suitable file
-
-(defvar *services* (make-hash-table)
-  "Stores a mapping of service names to service objects.")
-
 (defmethod find-service ((name symbol)
                          &key
                          (if-does-not-exist #'error))

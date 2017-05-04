@@ -1,6 +1,6 @@
 ;;;; architecture.service-provider.asd --- System definition of architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012, 2013, 2014, 2016 Jan Moringen
+;;;; Copyright (C) 2012-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -18,6 +18,7 @@
                  :serial     t
                  :components ((:file       "package")
                               (:file       "types")
+                              (:file       "variables")
                               (:file       "conditions")
                               (:file       "protocol")
                               (:file       "mixins")
