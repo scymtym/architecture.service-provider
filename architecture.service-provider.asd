@@ -52,4 +52,4 @@
                               (:file       "compilation"))))
 
   :perform     (test-op (operation component)
-                 (funcall (read-from-string "service-provider.test:run-tests"))))
+                 (uiop:symbol-call '#:service-provider.test '#:run-tests)))

@@ -34,4 +34,4 @@
                  :pathname   "test/hooks"))
 
   :perform     (test-op (operation component)
-                 (eval (read-from-string "(service-provider.hooks.test:run-tests)"))))
+                 (uiop:symbol-call '#:service-provider.hooks.test '#:run-tests)))
