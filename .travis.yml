@@ -21,4 +21,6 @@ script:
       -Q
       -s architecture.service-provider/test
       -s architecture.service-provider-and-hooks/test
-      '(or (service-provider.test:run-tests) (uiop:quit -1))'
+      '(or (and (service-provider.test:run-tests)
+                (service-provider.hooks.test:run-tests))
+           (uiop:quit -1))'

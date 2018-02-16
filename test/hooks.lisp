@@ -1,14 +1,34 @@
 ;;;; hooks.lisp --- Unit tests for the hooks extension.
 ;;;;
-;;;; Copyright (C) 2014, 2017 Jan Moringen
+;;;; Copyright (C) 2014, 2017, 2018 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package #:service-provider.test)
+(cl:defpackage #:service-provider.hooks.test
+  (:use
+   #:cl
+   #:alexandria
+   #:let-plus
+   #:fiveam
 
-(def-suite service-provider.hooks
-    :in service-provider)
+   #:service-provider)
+
+  (:import-from #:service-provider.test
+   #:with-service)
+
+  (:export
+   #:run-tests)
+
+  (:documentation
+   "Contains unit tests for the hooks extension."))
+
+(cl:in-package #:service-provider.hooks.test)
+
+(def-suite service-provider.hooks)
 (in-suite service-provider.hooks)
+
+(defun run-tests ()
+  (run! 'service-provider.hooks))
 
 (defmacro with-hook-call-recording ((service calls-var) &body body)
   `(let ((,calls-var '()))

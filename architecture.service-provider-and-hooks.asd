@@ -34,4 +34,4 @@
                  :pathname   "test/hooks"))
 
   :perform     (test-op (operation component)
-                 (eval (read-from-string "(5am:run! 'service-provider.test::service-provider.hooks)"))))
+                 (eval (read-from-string "(service-provider.hooks.test:run-tests)"))))
