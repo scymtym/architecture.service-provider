@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Protocol provided by the architecture.service-provider system.
 ;;;;
-;;;; Copyright (C) 2012-2017 Jan Moringen
+;;;; Copyright (C) 2012-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -304,6 +304,8 @@
                                  &key
                                  (if-does-not-exist #'warn))
   (declare (notinline (setf find-provider)))
+  ;; IF-DOES-NOT-EXIST is only relevant in case NEW-VALUE is nil,
+  ;; i.e. a provider is being removed.
   (setf (find-provider (find-service service) provider
                        :if-does-not-exist if-does-not-exist)
         new-value))
