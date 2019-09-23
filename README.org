@@ -5,6 +5,9 @@
 #+KEYWORDS:    common lisp, architecture, service, provider, framework
 #+LANGUAGE:    en
 
+#+OPTIONS: H:2 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+
 * Introduction
   In software architectures, a common feature is parametrization of
   algorithms or protocols with higher order functions or classes and
@@ -47,7 +50,9 @@
    #+END_SRC
 
    #+RESULTS:
-   : #<STANDARD-SERVICE MY-SERVICE (0) {1007248B33}>
+   #+begin_example
+     #<STANDARD-SERVICE MY-SERVICE (0) {1004A98793}>
+   #+end_example
 
 ** Registering a Provider
    A provider of a service can be anything for which a method on
@@ -72,7 +77,9 @@
    #+END_SRC
 
    #+RESULTS:
-   : #<CLASS-PROVIDER MY-CLASS {1007325293}>
+   #+begin_example
+     #<CLASS-PROVIDER MY-CLASS {1004AAED33}>
+   #+end_example
 
 ** Instantiating a Provider
    The primary way to instantiate a service provider is
@@ -84,7 +91,9 @@
    #+END_SRC
 
    #+RESULTS:
-   : #<MY-CLASS {1007BCD683}>
+   #+begin_example
+     #<MY-CLASS {1004AEE443}>
+   #+end_example
 
 ** Introspecting a Service
    Introspection of services works much like CLOS introspection: after
@@ -101,14 +110,16 @@
    #+END_SRC
 
    #+RESULTS:
-   :
-   : (MY-SERVICE (#<CLASS-PROVIDER MY-CLASS {100EEF8AC3}>))
-   : #1=#<STANDARD-SERVICE MY-SERVICE (1) {100ED79C73}>
-   :
-   : Providers:
-   : #1=#<CLASS-PROVIDER MY-CLASS {100EEF8AC3}>
-   :
-   : "Providers of this service do stuff."
+   #+begin_example
+
+     (MY-SERVICE (#<CLASS-PROVIDER MY-CLASS {1004AAED33}>))
+     #<STANDARD-SERVICE MY-SERVICE (1) {1004A98793}>
+
+     Providers:
+     #<CLASS-PROVIDER MY-CLASS {1004AAED33}>
+
+     "Providers of this service do stuff."
+   #+end_example
 
 ** Compilation
    The system has some support for detecting uses of non-existent
@@ -127,11 +138,13 @@
    #+END_SRC
 
    #+RESULTS:
-   : SERVICE-PROVIDER:MISSING-SERVICE-WARNING:
-   :   No service is known for the designator :NO-SUCH-SERVICE.
-   : SERVICE-PROVIDER:MISSING-PROVIDER-WARNING:
-   :   No provider of service #<STANDARD-SERVICE MY-SERVICE (0) {1005A0A2B3}> is
-   :   known for the designator :NO-SUCH-PROVIDER.
+   #+begin_example
+     SERVICE-PROVIDER:MISSING-SERVICE-WARNING:
+       No service is known for the designator :NO-SUCH-SERVICE.
+     SERVICE-PROVIDER:MISSING-PROVIDER-WARNING:
+       No provider of service #<STANDARD-SERVICE MY-SERVICE (1) {1004A98793}> is
+       known for the designator :NO-SUCH-PROVIDER.
+   #+end_example
 
 ** TODO Efficiency Considerations
 * Dictionary
@@ -152,39 +165,47 @@
    #+END_SRC
 
    #+RESULTS:
-   : service-name SERVICE
-   :
-   : Return the symbol which is the name of SERVICE.
+   #+begin_example
+     service-name SERVICE
+
+     Return the symbol which is the name of SERVICE.
+   #+end_example
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:service-providers 'function)
    #+END_SRC
 
    #+RESULTS:
-   : service-providers SERVICE
-   :
-   : Return a sequence of the providers of SERVICE.
+   #+begin_example
+     service-providers SERVICE
+
+     Return a sequence of the providers of SERVICE.
+   #+end_example
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:service-providers/alist 'function)
    #+END_SRC
 
    #+RESULTS:
-   : service-providers/alist SERVICE
-   :
-   : Return the providers of SERVICE as an alist in which CARs are
-   : provider names and CDRs are the corresponding provider objects.
+   #+begin_example
+     service-providers/alist SERVICE
+
+     Return the providers of SERVICE as an alist in which CARs are
+     provider names and CDRs are the corresponding provider objects.
+   #+end_example
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc 'service-provider:service-providers/plist 'function)
    #+END_SRC
 
    #+RESULTS:
-   : service-providers/plist SERVICE
-   :
-   : Return the providers of SERVICE as a plist in which keys are
-   : provider names and values are the corresponding provider
-   : objects.
+   #+begin_example
+     service-providers/plist SERVICE
+
+     Return the providers of SERVICE as a plist in which keys are
+     provider names and values are the corresponding provider
+     objects.
+   #+end_example
 
    The following generic functions query and manipulate the global set
    of services:
@@ -194,26 +215,26 @@
 
    #+RESULTS:
    #+begin_example
-   find-service NAME &KEY IF-DOES-NOT-EXIST
+     find-service NAME &KEY IF-DOES-NOT-EXIST
 
-   Find and return the service designated by the `service-designator'
-   NAME.
+     Find and return the service designated by the `service-designator'
+     NAME.
 
-   IF-DOES-NOT-EXIST controls the behavior in case the designated
-   service cannot be found:
+     IF-DOES-NOT-EXIST controls the behavior in case the designated
+     service cannot be found:
 
-   The values #'error and 'error cause a `missing-service-error' to
-   be signaled.
+     The values #'error and 'error cause a `missing-service-error' to
+     be signaled.
 
-   The values #'warn and 'warn cause a `missing-service-warning' to
-   be signaled and nil to be returned.
+     The values #'warn and 'warn cause a `missing-service-warning' to
+     be signaled and nil to be returned.
 
-   The value nil causes nil to be returned without any conditions
-   being signaled.
+     The value nil causes nil to be returned without any conditions
+     being signaled.
 
-   `retry' and `use-value' restarts are established around error
-   signaling (if IF-DOES-NOT-EXIST mandates that).
-#+end_example
+     `retry' and `use-value' restarts are established around error
+     signaling (if IF-DOES-NOT-EXIST mandates that).
+   #+end_example
 
    #+BEGIN_SRC lisp :results value :exports results :session "doc"
      (doc '(setf service-provider:find-service) 'function)
@@ -221,23 +242,23 @@
 
    #+RESULTS:
    #+begin_example
-   (setf find-service) NEW-VALUE NAME &KEY IF-DOES-NOT-EXIST
+     (setf find-service) NEW-VALUE NAME &KEY IF-DOES-NOT-EXIST
 
-   Set the service designated by the `service-designator' NAME to
-   NEW-VALUE. When non-nil, NEW-VALUE has to implement the service
-   protocol.
+     Set the service designated by the `service-designator' NAME to
+     NEW-VALUE. When non-nil, NEW-VALUE has to implement the service
+     protocol.
 
-   If NAME already designates a service, the existing service object
-   is replaced with NEW-VALUE.
+     If NAME already designates a service, the existing service object
+     is replaced with NEW-VALUE.
 
-   If NEW-VALUE is nil, an existing service designated by NAME is
-   removed.
+     If NEW-VALUE is nil, an existing service designated by NAME is
+     removed.
 
-   IF-DOES-NOT-EXIST is accepted for parity with `find-service' and
-   usually ignored. However, when NEW-VALUE is nil, IF-DOES-NOT-EXIST
-   controls whether an error should be signaled in case the
-   to-be-removed service does not exist.
-#+end_example
+     IF-DOES-NOT-EXIST is accepted for parity with `find-service' and
+     usually ignored. However, when NEW-VALUE is nil, IF-DOES-NOT-EXIST
+     controls whether an error should be signaled in case the
+     to-be-removed service does not exist.
+   #+end_example
 
 ** Provider Protocol
    The following generic functions operate on provider objects:
@@ -481,8 +502,3 @@
      are supported.
    * Support for compile-time error-detection and optimizations can be
      added.
-
-* Settings                                                         :noexport:
-
-#+OPTIONS: H:2 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
